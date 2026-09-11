@@ -1,217 +1,82 @@
-import React, {useMemo, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ArrowDown, ArrowUpRight, BarChart3, Database, Github, Linkedin, Mail, Menu, X, Code2, Layers3, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin, Mail, Menu, MoveUpRight, Play, X } from "lucide-react";
 import "./styles.css";
 
-const projects = [
-  {
-    title: "FactuOnLine",
-    category: "Software",
-    tags: ["React", "NestJS", "SaaS", "PostgreSQL"],
-    description: "Plataforma SaaS multi-tenant para gestión comercial y facturación electrónica.",
-    featured: true
-  },
-  {
-    title: "Dashboard de Recaudación Municipal",
-    category: "Dashboard",
-    tags: ["Power BI", "SQL Server", "DAX"],
-    description: "Análisis ejecutivo de recaudación, deuda, periodos y comportamiento tributario.",
-    featured: true
-  },
-  {
-    title: "Análisis de Deuda Tributaria",
-    category: "Analytics",
-    tags: ["SQL", "Power BI", "Estadística"],
-    description: "Exploración y segmentación de cuentas pendientes para apoyar la gestión.",
-    featured: false
-  },
-  {
-    title: "Data Analysis Lab",
-    category: "Python",
-    tags: ["Python", "Pandas", "Statistics"],
-    description: "Casos de análisis estadístico y visualización para convertir datos en conclusiones.",
-    featured: false
-  },
-  {
-    title: "BI Comercial",
-    category: "Dashboard",
-    tags: ["Power BI", "DAX", "ETL"],
-    description: "Caso de estudio de ventas, clientes, productos, ticket promedio y evolución mensual.",
-    featured: false
-  },
-  {
-    title: "SQL Reporting",
-    category: "Analytics",
-    tags: ["SQL Server", "ETL", "Reporting"],
-    description: "Consultas y modelos para automatizar reportes operativos y financieros.",
-    featured: false
-  }
+const toolkit = [
+  { name: "SQL", label: "QUERY", steps: ["QUERY", "CLEAN", "TRANSFORM", "ANALYZE"], color: "mint" },
+  { name: "Power BI", label: "INSIGHT", steps: ["DATA", "MODEL", "DAX", "VISUALIZE"], color: "blue" },
+  { name: "Python", label: "EVOLVE", steps: ["DATA", "PANDAS", "ANALYSIS", "MODEL"], color: "yellow" },
+  { name: "Excel", label: "REPORT", steps: ["IMPORT", "VALIDATE", "PIVOT", "REPORT"], color: "mint" },
+  { name: "DAX", label: "MEASURE", steps: ["FILTER", "CALCULATE", "DEFINE", "EXPLAIN"], color: "blue" },
+  { name: "SQL Server", label: "DATABASE", steps: ["STORE", "JOIN", "INDEX", "SERVE"], color: "yellow" },
+  { name: "Power Query", label: "PREPARE", steps: ["SOURCE", "CLEAN", "MERGE", "LOAD"], color: "mint" },
+  { name: "PostgreSQL", label: "BUILD", steps: ["SCHEMA", "QUERY", "SECURE", "SCALE"], color: "blue" }
 ];
 
-const filters = ["Todos", "Dashboard", "Analytics", "Python", "Software"];
+const pipeline = [
+  ["SOURCE", "Archivos CSV, Excel y bases de datos."], ["EXTRACT", "Obtención de información desde bases de datos y archivos."], ["TRANSFORM", "Limpieza, normalización y preparación de datos."], ["VALIDATE", "Revisión de calidad, consistencia y valores faltantes."], ["MODEL", "Construcción de modelos para análisis."], ["VISUALIZE", "Conversión de datos en información comprensible."], ["INSIGHT", "Una lectura clara para decidir mejor."]
+];
+
+const projects = [
+  { number: "01", title: "Municipal Data Analytics", type: "DATA ANALYTICS", description: "Análisis y visualización de información tributaria y financiera para apoyar el seguimiento de recaudación e indicadores de gestión.", tags: ["SQL Server", "Power BI", "Excel", "ETL"], chart: "municipal" },
+  { number: "02", title: "FactuOnLine", type: "SOFTWARE / DATA", description: "Plataforma SaaS multiempresa para facturación electrónica y gestión comercial, desarrollada con arquitectura Multi-Tenant.", tags: ["NestJS", "React", "PostgreSQL", "REST API"], chart: "system" },
+  { number: "03", title: "Inventory Analytics", type: "OPERATIONS → INSIGHT", description: "Análisis histórico de inventarios, control de stock y mejora de reportes para optimizar procesos y decisiones operativas.", tags: ["Excel", "Data Analysis", "Inventory", "Reporting"], chart: "inventory" }
+];
+
+function useReveal() {
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); }
+    }), { threshold: 0.12 });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+}
+
+function SectionLabel({ index, children }) { return <div className="section-label"><span>{index}</span>{children}</div>; }
+
+function DataNetwork() {
+  const nodes = [[8, 18], [24, 43], [43, 25], [52, 70], [69, 38], [83, 18], [91, 65], [28, 82], [73, 84]];
+  const edges = [[0, 1], [0, 2], [1, 2], [1, 7], [2, 4], [2, 3], [3, 4], [3, 7], [3, 8], [4, 5], [4, 8], [5, 6], [6, 8], [7, 8]];
+  return <div className="network-wrap" aria-label="Visualización abstracta del flujo de datos"><div className="network-top"><span><i className="live-dot"/> LIVE DATA</span><span>01 — 07</span></div><svg className="network" viewBox="0 0 100 100" role="img">{edges.map(([a, b]) => <line key={`${a}-${b}`} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} />)}{nodes.map(([x, y], i) => <circle key={`${x}-${y}`} className={i === 3 || i === 8 ? "node-hot" : ""} cx={x} cy={y} r={i === 3 || i === 8 ? 2.2 : 1.2} />)}</svg><div className="network-caption"><span>recaudacion_2026.csv</span><strong>DATA <b>→</b> PROCESS <b>→</b> INSIGHT</strong></div></div>;
+}
+
+function ToolkitCard({ item }) {
+  const [active, setActive] = useState(false);
+  return <button className={`tool-card ${active ? "tool-active" : ""}`} onClick={() => setActive(!active)} onMouseEnter={() => setActive(true)} onMouseLeave={() => setActive(false)}><span className={`tool-icon ${item.color}`}><Database size={18}/></span><span className="tool-name">{item.name}</span><span className="tool-label">{active ? item.label : "OPEN"} <ArrowUpRight size={14}/></span><span className="tool-flow">{item.steps.map((step, index) => <React.Fragment key={step}><em>{step}</em>{index < item.steps.length - 1 && <b>→</b>}</React.Fragment>)}</span></button>;
+}
+
+function DataLab() {
+  const [running, setRunning] = useState(false);
+  return <div className="lab-shell"><div className="lab-bar"><span><i className="live-dot"/> DATA LAB / DEMO</span><span>recaudacion_2026.csv <span className="lab-dots">•••</span></span></div><div className="lab-body"><div className="dataset-summary"><span className="lab-kicker">DATASET</span><h3>recaudacion_2026.csv</h3><p>Municipal revenue exploration</p><button className={`run-button ${running ? "running" : ""}`} onClick={() => setRunning(!running)}><Play size={14} fill="currentColor"/>{running ? "PROCESSING..." : "RUN ANALYSIS"}</button></div><div className="data-metrics"><div><span>ROWS</span><strong className={running ? "counting" : ""}>10,482</strong></div><div><span>COLUMNS</span><strong>18</strong></div><div><span>NULL VALUES</span><strong className="yellow-text">42</strong></div><div><span>PROCESSING TIME</span><strong className="mint-text">0.84s</strong></div></div><div className="data-bars"><span>DATA TYPES</span><div className="data-bar-row"><i style={{width:"82%"}}/><b>TEXT 42%</b></div><div className="data-bar-row"><i style={{width:"58%"}}/><b>INTEGER 31%</b></div><div className="data-bar-row"><i style={{width:"36%"}}/><b>DATE 18%</b></div><div className="data-bar-row"><i style={{width:"18%"}}/><b>BOOLEAN 09%</b></div></div></div><div className="lab-terminal"><span>&gt; SELECT * FROM insights;</span><span className={running ? "terminal-active" : ""}>{running ? "&gt; transforming_data... model_ready ✓" : ">&nbsp; awaiting analysis..."}</span></div></div>;
+}
+
+function ProjectChart({ type }) {
+  if (type === "system") return <div className="system-visual"><div className="system-node">CLIENT</div><i/><div className="system-node active">API</div><i/><div className="system-node">DATABASE</div><div className="system-orbit">MULTI-TENANT</div></div>;
+  const bars = type === "inventory" ? [42, 72, 56, 84, 63, 91, 70] : [34, 50, 44, 68, 53, 79, 88];
+  return <div className="project-chart"><div className="chart-kpi"><span>{type === "inventory" ? "STOCK FLOW" : "REVENUE TREND"}</span><strong>{type === "inventory" ? "ANALYSIS" : "TRACKING"}</strong></div><div className="chart-grid"><svg viewBox="0 0 300 100" preserveAspectRatio="none"><polyline points={bars.map((value, index) => `${index * 50},${100 - value}`).join(" ")} /></svg>{bars.map((value, index) => <i key={index} style={{height: `${value}%`}}/> )}</div><div className="chart-axis"><span>JAN</span><span>MAR</span><span>JUN</span><span>SEP</span><span>DEC</span></div></div>;
+}
 
 function App() {
-  const [filter, setFilter] = useState("Todos");
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-
-  const visible = useMemo(() => {
-    const base = filter === "Todos" ? projects : projects.filter(p => p.category === filter);
-    return expanded || filter !== "Todos" ? base : base.slice(0, 4);
-  }, [filter, expanded]);
-
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
-    setOpen(false);
-  };
-
-  return (
-    <div className="site">
-      <header className="nav">
-        <button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button>
-        <nav className={open ? "navlinks open" : "navlinks"}>
-          <button onClick={() => scrollTo("about")}>Sobre mí</button>
-          <button onClick={() => scrollTo("services")}>Especialidad</button>
-          <button onClick={() => scrollTo("projects")}>Proyectos</button>
-          <button onClick={() => scrollTo("cv")}>CV</button>
-          <button onClick={() => scrollTo("contact")}>Contacto</button>
-        </nav>
-        <button className="menu" onClick={() => setOpen(!open)} aria-label="Menú">{open ? <X/> : <Menu/>}</button>
-      </header>
-
-      <main>
-        <section id="home" className="hero section">
-          <div className="eyebrow"><span className="dot"/> DATA · BI · SOFTWARE</div>
-          <h1>Convierto datos<br/><em>en decisiones.</em></h1>
-          <p className="hero-copy">
-            Soy Christian Gutierrez, Analista de Datos y BI Developer. Diseño dashboards,
-            análisis y soluciones digitales que transforman información compleja en algo útil.
-          </p>
-          <div className="hero-actions">
-            <button className="primary" onClick={() => scrollTo("projects")}>Ver proyectos <ArrowDown size={17}/></button>
-            <button className="text-btn" onClick={() => scrollTo("contact")}>Trabajemos juntos <ArrowUpRight size={17}/></button>
-          </div>
-          <div className="hero-photo" aria-label="Espacio para foto de Christian">
-            <span>Tu foto</span>
-            <small>Christian Gutierrez</small>
-          </div>
-          <div className="hero-meta">
-            <span>Lima, Perú</span><span>Disponible para proyectos</span>
-          </div>
-        </section>
-
-        <section id="about" className="section about">
-          <div className="section-label">01 — SOBRE MÍ</div>
-          <div className="about-grid">
-            <div>
-              <h2>Data analyst.<br/><span>Builder.</span></h2>
-            </div>
-            <div className="about-text">
-              <p>Soy Analista de Datos y estudiante de Ingeniería de Sistemas. Trabajo con datos, reporting y Business Intelligence, combinando análisis con desarrollo de software.</p>
-              <p>Actualmente desarrollo soluciones con SQL Server, Power BI, DAX, Excel, Python y tecnologías web. También construyo <strong>FactuOnLine</strong>, una plataforma SaaS multi-tenant para gestión comercial y facturación electrónica.</p>
-              <p>Mi enfoque es simple: entender el problema, trabajar los datos y construir una solución clara.</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="services" className="section services">
-          <div className="section-label">02 — ESPECIALIDAD</div>
-          <div className="service-intro">
-            <h2>Del dato a la<br/><span>acción.</span></h2>
-            <p>Una combinación de análisis, visualización y desarrollo para resolver problemas reales.</p>
-          </div>
-          <div className="service-grid">
-            <article><BarChart3/><span>01</span><h3>Business Intelligence</h3><p>Dashboards ejecutivos, indicadores y modelos de datos con Power BI y DAX.</p></article>
-            <article><Database/><span>02</span><h3>Data Analytics</h3><p>SQL, análisis exploratorio, estadística y generación de insights.</p></article>
-            <article><Code2/><span>03</span><h3>Data Engineering</h3><p>ETL, transformación, reporting y automatización de procesos de datos.</p></article>
-            <article><Layers3/><span>04</span><h3>Software & SaaS</h3><p>Aplicaciones web, APIs y arquitecturas multi-tenant con React y NestJS.</p></article>
-          </div>
-        </section>
-
-        <section id="projects" className="section projects">
-          <div className="section-label">03 — PORTFOLIO</div>
-          <div className="projects-head">
-            <div><h2>Trabajo<br/><span>seleccionado.</span></h2></div>
-            <p>Una muestra de proyectos de datos, BI y software.</p>
-          </div>
-          <div className="filters">
-            {filters.map(f => <button key={f} className={filter===f ? "active":""} onClick={() => {setFilter(f);setExpanded(true)}}>{f}</button>)}
-          </div>
-          <div className="project-grid">
-            {visible.map((p, i) => (
-              <article className={"project-card " + (p.featured ? "featured" : "")} key={p.title}>
-                <div className="project-visual">
-                  <div className="visual-grid"/>
-                  <div className="visual-number">0{i+1}</div>
-                  <Sparkles size={19}/>
-                </div>
-                <div className="project-body">
-                  <div className="project-top"><span>{p.category}</span><ArrowUpRight size={18}/></div>
-                  <h3>{p.title}</h3>
-                  <p>{p.description}</p>
-                  <div className="tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>
-                </div>
-              </article>
-            ))}
-          </div>
-          {filter === "Todos" && !expanded && <button className="load-more" onClick={() => setExpanded(true)}>Ver todos los proyectos <ArrowDown size={16}/></button>}
-        </section>
-
-        <section id="cv" className="section cv-section">
-          <div className="section-label">04 — CV</div>
-          <div className="cv-head">
-            <div>
-              <h2>Mi recorrido<br/><span>profesional.</span></h2>
-            </div>
-            <p>Consulta mi experiencia, formación y las herramientas con las que trabajo.</p>
-          </div>
-          <div className="cv-layout">
-            <div className="cv-preview" aria-label="Previsualización del CV">
-              <iframe className="cv-embed" src="/docs/CV_Christian_Gutierrez.pdf" title="CV de Christian Gutierrez">
-                <a href="/docs/CV_Christian_Gutierrez.pdf">Abrir CV</a>
-              </iframe>
-            </div>
-            <div className="cv-details">
-              <p className="cv-note">Consulta mi experiencia, formación y las herramientas con las que trabajo.</p>
-              <a className="primary" href="/docs/CV_Christian_Gutierrez.pdf" target="_blank" rel="noreferrer">Abrir CV <ArrowUpRight size={17}/></a>
-            </div>
-          </div>
-        </section>
-
-        <section className="section stack">
-          <div className="section-label">05 — STACK</div>
-          <div className="stack-wrap">
-            <h2>Herramientas que<br/><span>uso para construir.</span></h2>
-            <div className="skills">
-              {["Power BI","SQL Server","DAX","Power Query","Excel","Python","React","NestJS","TypeScript","PostgreSQL","Git","REST APIs"].map(s => <span key={s}>{s}</span>)}
-            </div>
-          </div>
-        </section>
-
-        <section className="manifesto">
-          <p>DATA → INSIGHT → DECISION</p>
-          <h2>Los datos no son el resultado.<br/><em>Son el punto de partida.</em></h2>
-        </section>
-
-        <section id="contact" className="section contact">
-          <div className="section-label">06 — CONTACTO</div>
-          <h2>¿Tienes un problema<br/>con tus <span>datos?</span></h2>
-          <p>Hablemos sobre dashboards, análisis, automatización o soluciones de software.</p>
-          <div className="email-list">
-            <a className="email" href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com <ArrowUpRight/></a>
-            <a className="email" href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com <ArrowUpRight/></a>
-          </div>
-          <div className="socials">
-            <a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={19}/></a>
-            <a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={19}/></a>
-            <a href="mailto:christhiangutierrezrosas@gmail.com" aria-label="Email"><Mail size={19}/></a>
-          </div>
-        </section>
-      </main>
-
-      <footer><span>© 2026 Christian Gutierrez</span><span>Data · BI · Software</span></footer>
-    </div>
-  );
+  const [pipelineActive, setPipelineActive] = useState(2);
+  useReveal();
+  const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setOpen(false); };
+  return <div className="site"><header className="nav"><button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button><nav className={open ? "navlinks open" : "navlinks"}><button onClick={() => scrollTo("about")}>ABOUT</button><button onClick={() => scrollTo("experience")}>EXPERIENCE</button><button onClick={() => scrollTo("projects")}>PROJECTS</button><button onClick={() => scrollTo("lab")}>DATA LAB</button><button onClick={() => scrollTo("contact")}>CONTACT</button></nav><button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button></header><main>
+    <section id="home" className="hero section"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST</strong><span>ASPIRING DATA SCIENTIST</span></div><p>Transformando datos en insights, decisiones y mejores sistemas. Analista de Datos especializado en SQL, Power BI y análisis de información, desarrollando mi camino hacia Data Science.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA</span></div></section>
+    <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>La curiosidad<br/><span>se volvió método.</span></h2><p>Trabajo con información real, problemas reales y sistemas que necesitan ser entendidos antes de ser mejorados.</p></div><div className="journey"><div className="journey-line"/><div className="journey-step"><span>01</span><strong>INVENTORY</strong><small>Operations & control</small></div><div className="journey-step"><span>02</span><strong>DATA MANAGEMENT</strong><small>Quality & structure</small></div><div className="journey-step current"><span>03</span><strong>ANALYTICS</strong><small>SQL & reporting</small></div><div className="journey-step"><span>04</span><strong>BUSINESS INTELLIGENCE</strong><small>Power BI & decisions</small></div><div className="journey-step next"><span>05</span><strong>DATA SCIENCE</strong><small>Python & statistics</small></div></div></div></section>
+    <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Herramientas para<br/><span>ver lo que importa.</span></h2><p>Mi centro de gravedad actual es SQL + Power BI + Excel + Python. Cada herramienta es una forma distinta de hacer mejores preguntas.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
+    <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>Una pequeña<br/><span>mesa de análisis.</span></h2><p>Una simulación visual de cómo pienso un dataset antes de convertirlo en una decisión. Demo con datos ficticios.</p></div><div className="reveal"><DataLab/></div></section>
+    <section className="section pipeline-section"><SectionLabel index="04">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>Del archivo al<br/><span>insight.</span></h2><p>La calidad de una visualización empieza mucho antes del gráfico.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
+    <section id="projects" className="section projects"><SectionLabel index="05">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Casos donde los<br/><span>datos hacen algo.</span></h2><p>Proyectos construidos desde la realidad operativa: información, sistemas y decisiones conectados.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a href="#contact" className="case-link">VIEW CASE <ArrowUpRight size={16}/></a></div><ProjectChart type={project.chart}/></div></article>)}</div></section>
+    <section className="section viz-section"><SectionLabel index="06">DATA VISUALIZATION</SectionLabel><div className="viz-heading reveal"><h2>Leer patrones.<br/><span>Contar historias.</span></h2><div className="viz-note"><span><i className="live-dot"/> VISUAL STUDY / 2026</span><p>Visualizaciones conceptuales inspiradas en el trabajo diario con indicadores, tendencias y distribuciones.</p></div></div><div className="viz-grid reveal"><div className="viz-card line-viz"><span>MONTHLY TREND</span><svg viewBox="0 0 400 150" preserveAspectRatio="none"><path d="M0 124 C40 118 45 90 82 101 S128 74 156 88 S200 54 237 69 S281 31 314 52 S355 28 400 10"/></svg><strong>+ insight over time</strong></div><div className="viz-card scatter-viz"><span>DISTRIBUTION</span><div>{Array.from({length: 30}, (_, index) => <i key={index} style={{left: `${(index * 37) % 91}%`, top: `${18 + ((index * 23) % 65)}%`}}/> )}</div><strong>patterns become visible</strong></div><div className="viz-card bars-viz"><span>INDICATOR MIX</span><div>{[46, 72, 57, 88, 66, 78].map((height, index) => <i key={index} style={{height: `${height}%`}}/> )}</div><strong>simple, useful, clear</strong></div></div></section>
+    <section className="section future"><SectionLabel index="07">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>Estoy construyendo la siguiente etapa con disciplina: profundizar en Python, estadística, automatización y análisis avanzado sin perder el contacto con los problemas del negocio.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL", "Power BI", "Excel", "Data Cleaning", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
+    <section id="experience" className="section experience"><SectionLabel index="08">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experiencia<br/><span>que acumula contexto.</span></h2><p>De operaciones e inventarios al análisis de información tributaria. Cada etapa dejó una forma más precisa de leer los datos.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Analista Encargado de Almacén</p><small>Inventario · análisis histórico · optimización de procesos</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Auditor y Administrativo de Almacén</p><small>Auditoría de información · discrepancias · digitalización</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho Chosica</h3><p>Analista Estadístico de Bases de Datos</p><small>SQL Server · Power BI · reportes financieros y tributarios</small></div></article></div></section>
+    <section id="cv" className="section cv-section"><SectionLabel index="09">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>El documento<br/><span>completo.</span></h2><p>Experiencia, formación y herramientas en una sola vista.</p><a className="primary" href="/docs/CV_Christian_Gutierrez.pdf" target="_blank" rel="noreferrer">OPEN CV <ArrowUpRight size={16}/></a></div><iframe className="cv-embed" src="/docs/CV_Christian_Gutierrez.pdf" title="CV de Christian Gutierrez"><a href="/docs/CV_Christian_Gutierrez.pdf">Abrir CV</a></iframe></div></section>
+    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><a className="contact-link" href="mailto:christhiangutierrezrosas@gmail.com">LET'S TALK <ArrowUpRight/></a><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a><a href="mailto:christhiangutierrezrosas@gmail.com" aria-label="Email"><Mail/></a></div></div></section>
+  </main><footer><span>© 2026 CHRISTIAN GUTIERREZ</span><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>;
 }
 
 createRoot(document.getElementById("root")).render(<App />);
