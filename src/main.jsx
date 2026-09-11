@@ -73,6 +73,7 @@ function App() {
           <button onClick={() => scrollTo("about")}>Sobre mí</button>
           <button onClick={() => scrollTo("services")}>Especialidad</button>
           <button onClick={() => scrollTo("projects")}>Proyectos</button>
+          <button onClick={() => scrollTo("cv")}>CV</button>
           <button onClick={() => scrollTo("contact")}>Contacto</button>
         </nav>
         <button className="menu" onClick={() => setOpen(!open)} aria-label="Menú">{open ? <X/> : <Menu/>}</button>
@@ -156,8 +157,29 @@ function App() {
           {filter === "Todos" && !expanded && <button className="load-more" onClick={() => setExpanded(true)}>Ver todos los proyectos <ArrowDown size={16}/></button>}
         </section>
 
+        <section id="cv" className="section cv-section">
+          <div className="section-label">04 — CV</div>
+          <div className="cv-head">
+            <div>
+              <h2>Mi recorrido<br/><span>profesional.</span></h2>
+            </div>
+            <p>Consulta mi experiencia, formación y las herramientas con las que trabajo.</p>
+          </div>
+          <div className="cv-layout">
+            <div className="cv-preview" aria-label="Previsualización del CV">
+              <iframe className="cv-embed" src="/docs/CV_Christian_Gutierrez.pdf" title="CV de Christian Gutierrez">
+                <a href="/docs/CV_Christian_Gutierrez.pdf">Abrir CV</a>
+              </iframe>
+            </div>
+            <div className="cv-details">
+              <p className="cv-note">Consulta mi experiencia, formación y las herramientas con las que trabajo.</p>
+              <a className="primary" href="/docs/CV_Christian_Gutierrez.pdf" target="_blank" rel="noreferrer">Abrir CV <ArrowUpRight size={17}/></a>
+            </div>
+          </div>
+        </section>
+
         <section className="section stack">
-          <div className="section-label">04 — STACK</div>
+          <div className="section-label">05 — STACK</div>
           <div className="stack-wrap">
             <h2>Herramientas que<br/><span>uso para construir.</span></h2>
             <div className="skills">
@@ -172,7 +194,7 @@ function App() {
         </section>
 
         <section id="contact" className="section contact">
-          <div className="section-label">05 — CONTACTO</div>
+          <div className="section-label">06 — CONTACTO</div>
           <h2>¿Tienes un problema<br/>con tus <span>datos?</span></h2>
           <p>Hablemos sobre dashboards, análisis, automatización o soluciones de software.</p>
           <div className="email-list">
