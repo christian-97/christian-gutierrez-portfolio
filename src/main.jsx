@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin, Mail, Menu, MoveUpRight, Play, X } from "lucide-react";
 import "./styles.css";
@@ -38,9 +38,147 @@ function useReveal() {
 function SectionLabel({ index, children }) { return <div className="section-label"><span>{index}</span>{children}</div>; }
 
 function DataNetwork() {
-  const nodes = [[8, 18], [24, 43], [43, 25], [52, 70], [69, 38], [83, 18], [91, 65], [28, 82], [73, 84]];
-  const edges = [[0, 1], [0, 2], [1, 2], [1, 7], [2, 4], [2, 3], [3, 4], [3, 7], [3, 8], [4, 5], [4, 8], [5, 6], [6, 8], [7, 8]];
-  return <div className="network-wrap" aria-label="Visualización abstracta del flujo de datos"><div className="network-top"><span><i className="live-dot"/> LIVE DATA</span><span>01 — 07</span></div><svg className="network" viewBox="0 0 100 100" role="img">{edges.map(([a, b]) => <line key={`${a}-${b}`} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} />)}{nodes.map(([x, y], i) => <circle key={`${x}-${y}`} className={i === 3 || i === 8 ? "node-hot" : ""} cx={x} cy={y} r={i === 3 || i === 8 ? 2.2 : 1.2} />)}</svg><div className="network-caption"><span>recaudacion_2026.csv</span><strong>DATA <b>→</b> PROCESS <b>→</b> INSIGHT</strong></div></div>;
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrapper = canvas.parentElement;
+    const context = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const state = { width: 0, height: 0, dpr: 1, count: 0, nodes: null, edges: null, positions: null, elapsed: 0, lastTime: 0, frame: 0, running: false, visible: false, measured: false };
+
+    const random = (seed) => {
+      let value = seed;
+      return () => {
+        value = (value * 1664525 + 1013904223) >>> 0;
+        return value / 4294967296;
+      };
+    };
+
+    const createNetwork = (count) => {
+      const next = random(42 + count);
+      const nodes = new Float32Array(count * 7);
+      for (let index = 0; index < count; index += 1) {
+        const offset = index * 7;
+        nodes[offset] = 0.04 + next() * 0.92;
+        nodes[offset + 1] = 0.08 + next() * 0.84;
+        nodes[offset + 2] = next() * Math.PI * 2;
+        nodes[offset + 3] = 0.004 + next() * 0.012;
+        nodes[offset + 4] = 0.004 + next() * 0.014;
+        nodes[offset + 5] = 0.18 + next() * 0.28;
+        nodes[offset + 6] = index % 11 === 3 || index % 13 === 0 ? 1 : 0;
+      }
+      const edgeCount = Math.floor(count * 0.9);
+      const edges = new Uint16Array(edgeCount * 2);
+      for (let index = 0; index < edgeCount; index += 1) {
+        const from = index % count;
+        const to = index < count ? (index + 1) % count : (index * 3 + 4) % count;
+        edges[index * 2] = from;
+        edges[index * 2 + 1] = to;
+      }
+      state.nodes = nodes;
+      state.edges = edges;
+      state.positions = new Float32Array(count * 2);
+      state.count = count;
+    };
+
+    const nodeCount = () => window.innerWidth <= 650 ? 11 : window.innerWidth <= 950 ? 20 : 30;
+
+    const render = () => {
+      const { width, height, nodes, edges, positions, count } = state;
+      context.clearRect(0, 0, width, height);
+      for (let index = 0; index < count; index += 1) {
+        const offset = index * 7;
+        positions[index * 2] = (nodes[offset] + Math.sin(state.elapsed * nodes[offset + 5] + nodes[offset + 2]) * nodes[offset + 3]) * width;
+        positions[index * 2 + 1] = (nodes[offset + 1] + Math.cos(state.elapsed * nodes[offset + 5] * 0.82 + nodes[offset + 2]) * nodes[offset + 4]) * height;
+      }
+      context.lineWidth = 0.55;
+      context.strokeStyle = "rgba(99, 179, 237, 0.22)";
+      context.setLineDash([2, 3]);
+      context.beginPath();
+      for (let index = 0; index < edges.length; index += 2) {
+        const from = edges[index] * 2;
+        const to = edges[index + 1] * 2;
+        context.moveTo(positions[from], positions[from + 1]);
+        context.lineTo(positions[to], positions[to + 1]);
+      }
+      context.stroke();
+      context.setLineDash([]);
+      for (let index = 0; index < count; index += 1) {
+        const position = index * 2;
+        const hot = nodes[index * 7 + 6] === 1;
+        context.beginPath();
+        context.fillStyle = hot ? "rgba(101, 214, 161, 0.9)" : index % 3 === 0 ? "rgba(99, 179, 237, 0.72)" : "rgba(167, 177, 184, 0.52)";
+        if (hot) context.shadowBlur = 7;
+        if (hot) context.shadowColor = "rgba(101, 214, 161, 0.7)";
+        context.arc(positions[position], positions[position + 1], hot ? 2.1 : 1.15, 0, Math.PI * 2);
+        context.fill();
+        if (hot) context.shadowBlur = 0;
+      }
+    };
+
+    const resize = () => {
+      const rect = wrapper.getBoundingClientRect();
+      const nextWidth = Math.round(rect.width);
+      const nextHeight = Math.round(rect.height);
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      if (state.measured && nextWidth === state.width && nextHeight === state.height && nextDpr === state.dpr) return;
+      state.width = nextWidth;
+      state.height = nextHeight;
+      state.dpr = nextDpr;
+      canvas.width = Math.max(1, Math.round(nextWidth * nextDpr));
+      canvas.height = Math.max(1, Math.round(nextHeight * nextDpr));
+      context.setTransform(nextDpr, 0, 0, nextDpr, 0, 0);
+      if (state.count !== nodeCount()) createNetwork(nodeCount());
+      state.measured = true;
+      render();
+    };
+
+    const loop = (time) => {
+      if (!state.running) return;
+      if (state.lastTime && time - state.lastTime < 16.67) {
+        state.frame = window.requestAnimationFrame(loop);
+        return;
+      }
+      const delta = state.lastTime ? Math.min((time - state.lastTime) / 1000, 0.05) : 0;
+      state.lastTime = time;
+      state.elapsed += delta;
+      render();
+      state.frame = window.requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (state.running || !state.visible || document.hidden || reducedMotion.matches) return;
+      state.running = true;
+      state.lastTime = 0;
+      state.frame = window.requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      state.running = false;
+      window.cancelAnimationFrame(state.frame);
+      state.frame = 0;
+    };
+    const onVisibilityChange = () => document.hidden ? stop() : start();
+    const onReducedMotionChange = () => reducedMotion.matches ? stop() : start();
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      state.visible = entry.isIntersecting;
+      state.visible ? start() : stop();
+    }, { threshold: 0.01 });
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(wrapper);
+    visibilityObserver.observe(wrapper);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    reducedMotion.addEventListener?.("change", onReducedMotionChange);
+    resize();
+    return () => {
+      stop();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      reducedMotion.removeEventListener?.("change", onReducedMotionChange);
+    };
+  }, []);
+
+  return <div className="network-wrap" aria-label="Visualización abstracta del flujo de datos"><div className="network-top"><span><i className="live-dot"/> LIVE DATA</span><span>01 — 07</span></div><canvas ref={canvasRef} className="network" aria-hidden="true"/><div className="network-caption"><span>recaudacion_2026.csv</span><strong>DATA <b>→</b> PROCESS <b>→</b> INSIGHT</strong></div></div>;
 }
 
 function ToolkitCard({ item }) {
@@ -75,8 +213,8 @@ function App() {
     <section className="section future"><SectionLabel index="07">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>Estoy construyendo la siguiente etapa con disciplina: profundizar en Python, estadística, automatización y análisis avanzado sin perder el contacto con los problemas del negocio.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL", "Power BI", "Excel", "Data Cleaning", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
     <section id="experience" className="section experience"><SectionLabel index="08">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experiencia<br/><span>que acumula contexto.</span></h2><p>De operaciones e inventarios al análisis de información tributaria. Cada etapa dejó una forma más precisa de leer los datos.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Analista Encargado de Almacén</p><small>Inventario · análisis histórico · optimización de procesos</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Auditor y Administrativo de Almacén</p><small>Auditoría de información · discrepancias · digitalización</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho Chosica</h3><p>Analista Estadístico de Bases de Datos</p><small>SQL Server · Power BI · reportes financieros y tributarios</small></div></article></div></section>
     <section id="cv" className="section cv-section"><SectionLabel index="09">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>El documento<br/><span>completo.</span></h2><p>Experiencia, formación y herramientas en una sola vista.</p><a className="primary" href="/docs/CV_Christian_Gutierrez.pdf" target="_blank" rel="noreferrer">OPEN CV <ArrowUpRight size={16}/></a></div><iframe className="cv-embed" src="/docs/CV_Christian_Gutierrez.pdf" title="CV de Christian Gutierrez"><a href="/docs/CV_Christian_Gutierrez.pdf">Abrir CV</a></iframe></div></section>
-    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><a className="contact-link" href="mailto:christhiangutierrezrosas@gmail.com">LET'S TALK <ArrowUpRight/></a><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a><a href="mailto:christhiangutierrezrosas@gmail.com" aria-label="Email"><Mail/></a></div></div></section>
-  </main><footer><span>© 2026 CHRISTIAN GUTIERREZ</span><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>;
+    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><a className="contact-link" href="mailto:christhiangutierrezrosas@gmail.com">LET'S TALK <ArrowUpRight/></a><div className="contact-emails"><a href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com</a><a href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com</a></div><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a><a href="mailto:christhiangutierrezrosas@gmail.com" aria-label="Email"><Mail/></a></div></div></section>
+  </main><footer><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>;
 }
 
 createRoot(document.getElementById("root")).render(<App />);
