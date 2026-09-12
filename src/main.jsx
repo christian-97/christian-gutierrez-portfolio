@@ -4,15 +4,60 @@ import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin
 import "./styles.css";
 
 const toolkit = [
-  { name: "SQL Server", label: "QUERY", steps: ["QUERY", "CLEAN", "TRANSFORM", "ANALYZE"], color: "mint" },
-  { name: "Power BI", label: "INSIGHT", steps: ["DATA", "MODEL", "DAX", "VISUALIZE"], color: "blue" },
-  { name: "Python", label: "EVOLVE", steps: ["DATA", "PANDAS", "ANALYSIS", "MODEL"], color: "yellow" },
-  { name: "Excel", label: "REPORT", steps: ["IMPORT", "VALIDATE", "PIVOT", "REPORT"], color: "mint" },
-  { name: "DAX", label: "MEASURE", steps: ["FILTER", "CALCULATE", "DEFINE", "EXPLAIN"], color: "blue" },
-  { name: "Power Query", label: "PREPARE", steps: ["SOURCE", "CLEAN", "MERGE", "LOAD"], color: "yellow" },
-  { name: "VS Community · SSIS", label: "DEVELOPMENT", steps: ["CODE", "DEBUG", "BUILD", "DEPLOY"], color: "purple" },
-  { name: "React", label: "BUILD", steps: ["COMPONENT", "STATE", "UI", "DEPLOY"], color: "mint" },
-  { name: "GitHub", label: "VERSION", steps: ["COMMIT", "BRANCH", "MERGE", "DEPLOY"], color: "mint" }
+  {
+    name: "SQL Server",
+    desc: "Consultas y preparación de datos.",
+    tech: "SQL · ETL · Transformación · Reporting",
+    color: "mint"
+  },
+  {
+    name: "Power BI",
+    desc: "Dashboards y análisis de información.",
+    tech: "Modelado · DAX · KPIs · Visualización",
+    color: "blue"
+  },
+  {
+    name: "Python",
+    desc: "Exploración y análisis de datos.",
+    tech: "Pandas · Cleaning · Analysis · Visualization",
+    color: "yellow"
+  },
+  {
+    name: "Excel",
+    desc: "Análisis operativo y validación.",
+    tech: "Tablas dinámicas · Fórmulas · Conciliación",
+    color: "mint"
+  },
+  {
+    name: "DAX",
+    desc: "Métricas y lógica de negocio.",
+    tech: "Medidas · Time Intelligence · KPIs",
+    color: "blue"
+  },
+  {
+    name: "Power Query",
+    desc: "Limpieza y transformación de datos.",
+    tech: "Extracción · Normalización · Modelado M",
+    color: "yellow"
+  },
+  {
+    name: "VS Community · SSIS",
+    desc: "Integración y procesamiento de datos.",
+    tech: "ETL · Extract · Transform · Load",
+    color: "purple"
+  },
+  {
+    name: "React",
+    desc: "Desarrollo de interfaces y vistas web.",
+    tech: "Componentes · Estado · UI interactiva",
+    color: "mint"
+  },
+  {
+    name: "GitHub",
+    desc: "Control de versiones y repositorios.",
+    tech: "Git · Commits · Branching · Código",
+    color: "mint"
+  }
 ];
 
 
@@ -365,9 +410,15 @@ const TOOL_ICONS = {
 };
 
 function ToolkitCard({ item }) {
-  const [active, setActive] = useState(false);
   const icon = TOOL_ICONS[item.name];
-  return <button className={`tool-card ${active ? "tool-active" : ""}`} onClick={() => setActive(!active)} onMouseEnter={() => setActive(true)} onMouseLeave={() => setActive(false)}><span className={`tool-icon ${item.color}`}>{icon ?? null}</span><span className="tool-name">{item.name}</span><span className="tool-label">{active ? item.label : "OPEN"} <ArrowUpRight size={14}/></span><span className="tool-flow">{item.steps.map((step, index) => <React.Fragment key={step}><em>{step}</em>{index < item.steps.length - 1 && <b>→</b>}</React.Fragment>)}</span></button>;
+  return (
+    <div className="tool-card">
+      <span className={`tool-icon ${item.color}`}>{icon ?? null}</span>
+      <span className="tool-name">{item.name}</span>
+      <p className="tool-desc">{item.desc}</p>
+      <span className="tool-tags">{item.tech}</span>
+    </div>
+  );
 }
 
 function DataLab() {
@@ -388,7 +439,14 @@ function App() {
   const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setOpen(false); };
   return <div className="site"><header className="nav"><button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button><nav className={open ? "navlinks open" : "navlinks"}><button onClick={() => scrollTo("about")}>ABOUT</button><button onClick={() => scrollTo("experience")}>EXPERIENCE</button><button onClick={() => scrollTo("projects")}>PROJECTS</button><button onClick={() => scrollTo("lab")}>DATA LAB</button><button onClick={() => scrollTo("contact")}>CONTACT</button></nav><button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button></header><main>
     <section id="home" className="hero section"><div className="hero-inner"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST · BI DEVELOPER</strong><span>ASPIRING DATA SCIENTIST</span></div><p>Combino Data Analytics, Business Intelligence, visualización de datos, Data Engineering y desarrollo de software para transformar información en insights, decisiones y mejores sistemas.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><a className="text-btn" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DESCARGAR CV <ArrowDown size={16}/></a><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><ProfilePhoto/></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA <b>/</b> SSIS </span></div></section>
-    <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>La curiosidad<br/><span>se volvió método.</span></h2><p>Trabajo con datos reales y problemas reales, buscando entender la información, encontrar patrones y convertirlos en insights para tomar mejores decisiones.</p></div><div className="journey"><div className="journey-line"/><div className="journey-step"><span>01</span><strong>INVENTORY</strong><small>Operations & control</small></div><div className="journey-step"><span>02</span><strong>DATA MANAGEMENT</strong><small>Quality & structure</small></div><div className="journey-step current"><span>03</span><strong>ANALYTICS</strong><small>SQL & reporting</small></div><div className="journey-step"><span>04</span><strong>BUSINESS INTELLIGENCE</strong><small>Power BI & decisions</small></div><div className="journey-step next"><span>05</span><strong>DATA SCIENCE</strong><small>Python & statistics</small></div></div></div></section>
+    <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>La curiosidad<br/><span>se volvió método.</span></h2><p>Trabajo con datos reales y problemas reales, buscando entender la información, encontrar patrones y convertirlos en insights para tomar mejores decisiones.</p></div>        <div className="journey">
+          <div className="journey-line"/>
+          <div className="journey-step"><span>01</span><strong>INVENTORY</strong><small>Operations & control</small></div>
+          <div className="journey-step"><span>02</span><strong>DATA MANAGEMENT</strong><small>Quality & structure</small></div>
+          <div className="journey-step"><span>03</span><strong>ANALYTICS</strong><small>SQL & reporting</small></div>
+          <div className="journey-step current"><span>04</span><strong>BUSINESS INTELLIGENCE</strong><small>Power BI & decisions</small></div>
+          <div className="journey-step next"><span>05</span><strong>DATA SCIENCE</strong><small>Python & statistics</small></div>
+        </div></div></section>
     <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Herramientas para<br/><span>ver lo que importa.</span></h2><p>SQL Server, Power BI, DAX, Power Query, Excel avanzado, Python, ETL y SSIS para datos; React, NestJS, TypeScript, PostgreSQL, REST APIs y Git / GitHub para soluciones digitales.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
     <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>Una pequeña<br/><span>mesa de análisis.</span></h2><p>Una simulación visual de cómo pienso un dataset antes de convertirlo en una decisión. Demo con datos ficticios.</p></div><div className="reveal"><DataLab/></div></section>
     <section className="section pipeline-section"><SectionLabel index="04">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>Del archivo al<br/><span>insight.</span></h2><p>La calidad de una visualización empieza mucho antes del gráfico.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
