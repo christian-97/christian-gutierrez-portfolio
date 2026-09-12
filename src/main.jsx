@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin, Mail, Menu, MoveUpRight, Play, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin, Menu, MoveUpRight, Play, X } from "lucide-react";
 import "./styles.css";
 
 const toolkit = [
-  { name: "SQL", label: "QUERY", steps: ["QUERY", "CLEAN", "TRANSFORM", "ANALYZE"], color: "mint" },
+  { name: "SQL Server", label: "QUERY", steps: ["QUERY", "CLEAN", "TRANSFORM", "ANALYZE"], color: "mint" },
   { name: "Power BI", label: "INSIGHT", steps: ["DATA", "MODEL", "DAX", "VISUALIZE"], color: "blue" },
   { name: "Python", label: "EVOLVE", steps: ["DATA", "PANDAS", "ANALYSIS", "MODEL"], color: "yellow" },
   { name: "Excel", label: "REPORT", steps: ["IMPORT", "VALIDATE", "PIVOT", "REPORT"], color: "mint" },
   { name: "DAX", label: "MEASURE", steps: ["FILTER", "CALCULATE", "DEFINE", "EXPLAIN"], color: "blue" },
-  { name: "SQL Server", label: "DATABASE", steps: ["STORE", "JOIN", "INDEX", "SERVE"], color: "yellow" },
-  { name: "Power Query", label: "PREPARE", steps: ["SOURCE", "CLEAN", "MERGE", "LOAD"], color: "mint" },
-  { name: "PostgreSQL", label: "BUILD", steps: ["SCHEMA", "QUERY", "SECURE", "SCALE"], color: "blue" }
+  { name: "Power Query", label: "PREPARE", steps: ["SOURCE", "CLEAN", "MERGE", "LOAD"], color: "yellow" },
+  { name: "React", label: "BUILD", steps: ["COMPONENT", "STATE", "UI", "DEPLOY"], color: "mint" },
+  { name: "PostgreSQL", label: "DATABASE", steps: ["SCHEMA", "QUERY", "SECURE", "SCALE"], color: "blue" }
 ];
 
 const pipeline = [
@@ -19,9 +19,12 @@ const pipeline = [
 ];
 
 const projects = [
-  { number: "01", title: "Municipal Data Analytics", type: "DATA ANALYTICS", description: "Análisis y visualización de información tributaria y financiera para apoyar el seguimiento de recaudación e indicadores de gestión.", tags: ["SQL Server", "Power BI", "Excel", "ETL"], chart: "municipal" },
-  { number: "02", title: "FactuOnLine", type: "SOFTWARE / DATA", description: "Plataforma SaaS multiempresa para facturación electrónica y gestión comercial, desarrollada con arquitectura Multi-Tenant.", tags: ["NestJS", "React", "PostgreSQL", "REST API"], chart: "system" },
-  { number: "03", title: "Inventory Analytics", type: "OPERATIONS → INSIGHT", description: "Análisis histórico de inventarios, control de stock y mejora de reportes para optimizar procesos y decisiones operativas.", tags: ["Excel", "Data Analysis", "Inventory", "Reporting"], chart: "inventory" }
+  { number: "01", title: "FactuOnLine", type: "SOFTWARE / SAAS", description: "Plataforma SaaS multiempresa para facturación electrónica y gestión comercial, desarrollada con arquitectura Multi-Tenant.", tags: ["React", "NestJS", "TypeScript", "PostgreSQL", "REST APIs"], chart: "system" },
+  { number: "02", title: "Dashboard de Recaudación Municipal", type: "DATA ANALYTICS / BI", description: "Análisis y visualización de información tributaria y financiera para apoyar el seguimiento de recaudación e indicadores de gestión.", tags: ["SQL Server", "Power BI", "DAX", "ETL"], chart: "municipal" },
+  { number: "03", title: "Análisis de Deuda Tributaria", type: "DATA ANALYTICS", description: "Análisis de información tributaria para apoyar el seguimiento y la lectura de indicadores de gestión.", tags: ["SQL Server", "Excel", "Power Query", "Power BI"], chart: "municipal" },
+  { number: "04", title: "Data Analysis Lab", type: "DATA EXPLORATION", description: "Espacio de exploración para preparar, validar y convertir datos en hallazgos accionables.", tags: ["Python", "ETL", "Data Analysis", "Visualization"], chart: "inventory" },
+  { number: "05", title: "BI Comercial", type: "BUSINESS INTELLIGENCE", description: "Reportes y visualizaciones orientadas a comprender indicadores comerciales y apoyar decisiones.", tags: ["Power BI", "DAX", "Excel", "Data Visualization"], chart: "municipal" },
+  { number: "06", title: "SQL Reporting", type: "DATA REPORTING", description: "Consultas y reportes para transformar datos operativos en información clara y utilizable.", tags: ["SQL Server", "ETL", "Power Query", "Reporting"], chart: "inventory" }
 ];
 
 function useReveal() {
@@ -45,7 +48,7 @@ function DataNetwork() {
     const wrapper = canvas.parentElement;
     const context = canvas.getContext("2d", { alpha: true, desynchronized: true });
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const state = { width: 0, height: 0, dpr: 1, count: 0, nodes: null, edges: null, positions: null, elapsed: 0, lastTime: 0, frame: 0, running: false, visible: false, measured: false };
+    const state = { width: 0, height: 0, dpr: 1, count: 0, nodes: null, edges: null, positions: null, elapsed: 0, lastTime: 0, frame: 0, running: false, visible: false, measured: false, pointer: { x: 0, y: 0, active: false } };
 
     const random = (seed) => {
       let value = seed;
@@ -58,62 +61,105 @@ function DataNetwork() {
     const createNetwork = (count) => {
       const next = random(42 + count);
       const nodes = new Float32Array(count * 7);
+      const layers = 5;
+      const perLayer = Math.ceil(count / layers);
       for (let index = 0; index < count; index += 1) {
         const offset = index * 7;
-        nodes[offset] = 0.04 + next() * 0.92;
-        nodes[offset + 1] = 0.08 + next() * 0.84;
+        const layer = Math.min(layers - 1, Math.floor(index / perLayer));
+        nodes[offset] = 0.12 + layer * 0.19 + (next() - 0.5) * 0.035;
+        nodes[offset + 1] = 0.17 + next() * 0.66;
         nodes[offset + 2] = next() * Math.PI * 2;
-        nodes[offset + 3] = 0.004 + next() * 0.012;
-        nodes[offset + 4] = 0.004 + next() * 0.014;
-        nodes[offset + 5] = 0.18 + next() * 0.28;
+        nodes[offset + 3] = layer;
+        nodes[offset + 4] = 0.004 + next() * 0.008;
+        nodes[offset + 5] = 0.16 + next() * 0.2;
         nodes[offset + 6] = index % 11 === 3 || index % 13 === 0 ? 1 : 0;
       }
-      const edgeCount = Math.floor(count * 0.9);
-      const edges = new Uint16Array(edgeCount * 2);
-      for (let index = 0; index < edgeCount; index += 1) {
-        const from = index % count;
-        const to = index < count ? (index + 1) % count : (index * 3 + 4) % count;
-        edges[index * 2] = from;
-        edges[index * 2 + 1] = to;
+      const connections = [];
+      for (let index = 0; index < count; index += 1) {
+        const layer = nodes[index * 7 + 3];
+        if (layer >= layers - 1) continue;
+        const nextStart = (layer + 1) * perLayer;
+        const nextCount = Math.min(perLayer, count - nextStart);
+        if (nextCount <= 0) continue;
+        connections.push(index, nextStart + (index % perLayer) % nextCount);
+        if (index % 2 === 0) connections.push(index, nextStart + (index * 3 + 1) % nextCount);
       }
       state.nodes = nodes;
-      state.edges = edges;
+      state.edges = new Uint16Array(connections);
       state.positions = new Float32Array(count * 2);
       state.count = count;
     };
 
-    const nodeCount = () => window.innerWidth <= 650 ? 11 : window.innerWidth <= 950 ? 20 : 30;
+    const nodeCount = () => window.innerWidth <= 650 ? 16 : window.innerWidth <= 950 ? 26 : 38;
 
     const render = () => {
       const { width, height, nodes, edges, positions, count } = state;
       context.clearRect(0, 0, width, height);
+
       for (let index = 0; index < count; index += 1) {
         const offset = index * 7;
-        positions[index * 2] = (nodes[offset] + Math.sin(state.elapsed * nodes[offset + 5] + nodes[offset + 2]) * nodes[offset + 3]) * width;
-        positions[index * 2 + 1] = (nodes[offset + 1] + Math.cos(state.elapsed * nodes[offset + 5] * 0.82 + nodes[offset + 2]) * nodes[offset + 4]) * height;
+        const baseX = nodes[offset] * width + Math.sin(state.elapsed * nodes[offset + 5] + nodes[offset + 2]) * width * nodes[offset + 4];
+        const baseY = nodes[offset + 1] * height + Math.cos(state.elapsed * nodes[offset + 5] * 0.8 + nodes[offset + 2]) * height * nodes[offset + 4];
+        let x = baseX;
+        let y = baseY;
+        if (state.pointer.active) {
+          const dx = x - state.pointer.x;
+          const dy = y - state.pointer.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance < 150) {
+            const influence = ((150 - distance) / 150) ** 2;
+            x += dx * influence * 0.12;
+            y += dy * influence * 0.12;
+          }
+        }
+        positions[index * 2] = x;
+        positions[index * 2 + 1] = y;
       }
-      context.lineWidth = 0.55;
-      context.strokeStyle = "rgba(99, 179, 237, 0.22)";
-      context.setLineDash([2, 3]);
-      context.beginPath();
+
+      context.lineWidth = 0.5;
       for (let index = 0; index < edges.length; index += 2) {
         const from = edges[index] * 2;
         const to = edges[index + 1] * 2;
+        const midX = (positions[from] + positions[to]) / 2;
+        const midY = (positions[from + 1] + positions[to + 1]) / 2;
+        const near = state.pointer.active && Math.hypot(midX - state.pointer.x, midY - state.pointer.y) < 125;
+        context.strokeStyle = near ? "rgba(101, 214, 161, 0.68)" : "rgba(99, 179, 237, 0.26)";
+        context.beginPath();
         context.moveTo(positions[from], positions[from + 1]);
         context.lineTo(positions[to], positions[to + 1]);
+        context.stroke();
       }
-      context.stroke();
-      context.setLineDash([]);
+
       for (let index = 0; index < count; index += 1) {
-        const position = index * 2;
-        const hot = nodes[index * 7 + 6] === 1;
+        const offset = index * 7;
+        const x = positions[index * 2];
+        const y = positions[index * 2 + 1];
+        const hot = nodes[offset + 6] === 1;
+        const near = state.pointer.active && Math.hypot(x - state.pointer.x, y - state.pointer.y) < 110;
+        context.fillStyle = hot || near ? "rgba(101, 214, 161, 1)" : "rgba(167, 177, 184, 0.52)";
         context.beginPath();
-        context.fillStyle = hot ? "rgba(101, 214, 161, 0.9)" : index % 3 === 0 ? "rgba(99, 179, 237, 0.72)" : "rgba(167, 177, 184, 0.52)";
-        if (hot) context.shadowBlur = 7;
-        if (hot) context.shadowColor = "rgba(101, 214, 161, 0.7)";
-        context.arc(positions[position], positions[position + 1], hot ? 2.1 : 1.15, 0, Math.PI * 2);
+        context.arc(x, y, hot ? 4 : near ? 2 : 3, 0, Math.PI * 2);
         context.fill();
-        if (hot) context.shadowBlur = 0;
+      }
+
+      const particleCount = Math.min(10, Math.floor(edges.length / 2));
+      for (let index = 0; index < particleCount; index += 1) {
+        const edgeOffset = (Math.floor(state.elapsed * 0.55 + index * 2.7) % (edges.length / 2)) * 2;
+        const from = edges[edgeOffset] * 2;
+        const to = edges[edgeOffset + 1] * 2;
+        const progress = (state.elapsed * 0.42 + index * 0.17) % 1;
+        let x = positions[from] + (positions[to] - positions[from]) * progress;
+        let y = positions[from + 1] + (positions[to + 1] - positions[from + 1]) * progress;
+        if (state.pointer.active) {
+          const distance = Math.hypot(x - state.pointer.x, y - state.pointer.y);
+          if (distance < 115) {
+            const influence = ((115 - distance) / 115) ** 2;
+            x += (state.pointer.x - x) * influence * 0.045;
+            y += (state.pointer.y - y) * influence * 0.045;
+          }
+        }
+        context.fillStyle = "rgba(242, 201, 76, 0.72)";
+        context.fillRect(x - 1.5, y - 1.5, 3, 3);
       }
     };
 
@@ -142,7 +188,7 @@ function DataNetwork() {
       }
       const delta = state.lastTime ? Math.min((time - state.lastTime) / 1000, 0.05) : 0;
       state.lastTime = time;
-      state.elapsed += delta;
+      state.elapsed += delta * 1.15;
       render();
       state.frame = window.requestAnimationFrame(loop);
     };
@@ -159,6 +205,15 @@ function DataNetwork() {
     };
     const onVisibilityChange = () => document.hidden ? stop() : start();
     const onReducedMotionChange = () => reducedMotion.matches ? stop() : start();
+    const onPointerMove = (event) => {
+      const rect = wrapper.getBoundingClientRect();
+      const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      state.pointer.active = inside;
+      if (inside) {
+        state.pointer.x = event.clientX - rect.left;
+        state.pointer.y = event.clientY - rect.top;
+      }
+    };
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       state.visible = entry.isIntersecting;
       state.visible ? start() : stop();
@@ -167,6 +222,7 @@ function DataNetwork() {
     resizeObserver.observe(wrapper);
     visibilityObserver.observe(wrapper);
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
     reducedMotion.addEventListener?.("change", onReducedMotionChange);
     resize();
     return () => {
@@ -174,6 +230,7 @@ function DataNetwork() {
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pointermove", onPointerMove);
       reducedMotion.removeEventListener?.("change", onReducedMotionChange);
     };
   }, []);
@@ -203,17 +260,17 @@ function App() {
   useReveal();
   const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setOpen(false); };
   return <div className="site"><header className="nav"><button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button><nav className={open ? "navlinks open" : "navlinks"}><button onClick={() => scrollTo("about")}>ABOUT</button><button onClick={() => scrollTo("experience")}>EXPERIENCE</button><button onClick={() => scrollTo("projects")}>PROJECTS</button><button onClick={() => scrollTo("lab")}>DATA LAB</button><button onClick={() => scrollTo("contact")}>CONTACT</button></nav><button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button></header><main>
-    <section id="home" className="hero section"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST</strong><span>ASPIRING DATA SCIENTIST</span></div><p>Transformando datos en insights, decisiones y mejores sistemas. Analista de Datos especializado en SQL, Power BI y análisis de información, desarrollando mi camino hacia Data Science.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA</span></div></section>
+    <section id="home" className="hero section"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST · BI DEVELOPER</strong><span>ASPIRING DATA SCIENTIST</span></div><p>Combino Data Analytics, Business Intelligence, visualización de datos, Data Engineering y desarrollo de software para transformar información en insights, decisiones y mejores sistemas.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><a className="text-btn" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DESCARGAR CV <ArrowDown size={16}/></a><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA</span></div></section>
     <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>La curiosidad<br/><span>se volvió método.</span></h2><p>Trabajo con información real, problemas reales y sistemas que necesitan ser entendidos antes de ser mejorados.</p></div><div className="journey"><div className="journey-line"/><div className="journey-step"><span>01</span><strong>INVENTORY</strong><small>Operations & control</small></div><div className="journey-step"><span>02</span><strong>DATA MANAGEMENT</strong><small>Quality & structure</small></div><div className="journey-step current"><span>03</span><strong>ANALYTICS</strong><small>SQL & reporting</small></div><div className="journey-step"><span>04</span><strong>BUSINESS INTELLIGENCE</strong><small>Power BI & decisions</small></div><div className="journey-step next"><span>05</span><strong>DATA SCIENCE</strong><small>Python & statistics</small></div></div></div></section>
-    <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Herramientas para<br/><span>ver lo que importa.</span></h2><p>Mi centro de gravedad actual es SQL + Power BI + Excel + Python. Cada herramienta es una forma distinta de hacer mejores preguntas.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
+    <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Herramientas para<br/><span>ver lo que importa.</span></h2><p>SQL Server, Power BI, DAX, Power Query, Excel avanzado, Python, ETL y SSIS para datos; React, NestJS, TypeScript, PostgreSQL, REST APIs y Git / GitHub para soluciones digitales.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
     <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>Una pequeña<br/><span>mesa de análisis.</span></h2><p>Una simulación visual de cómo pienso un dataset antes de convertirlo en una decisión. Demo con datos ficticios.</p></div><div className="reveal"><DataLab/></div></section>
     <section className="section pipeline-section"><SectionLabel index="04">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>Del archivo al<br/><span>insight.</span></h2><p>La calidad de una visualización empieza mucho antes del gráfico.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
     <section id="projects" className="section projects"><SectionLabel index="05">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Casos donde los<br/><span>datos hacen algo.</span></h2><p>Proyectos construidos desde la realidad operativa: información, sistemas y decisiones conectados.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a href="#contact" className="case-link">VIEW CASE <ArrowUpRight size={16}/></a></div><ProjectChart type={project.chart}/></div></article>)}</div></section>
     <section className="section viz-section"><SectionLabel index="06">DATA VISUALIZATION</SectionLabel><div className="viz-heading reveal"><h2>Leer patrones.<br/><span>Contar historias.</span></h2><div className="viz-note"><span><i className="live-dot"/> VISUAL STUDY / 2026</span><p>Visualizaciones conceptuales inspiradas en el trabajo diario con indicadores, tendencias y distribuciones.</p></div></div><div className="viz-grid reveal"><div className="viz-card line-viz"><span>MONTHLY TREND</span><svg viewBox="0 0 400 150" preserveAspectRatio="none"><path d="M0 124 C40 118 45 90 82 101 S128 74 156 88 S200 54 237 69 S281 31 314 52 S355 28 400 10"/></svg><strong>+ insight over time</strong></div><div className="viz-card scatter-viz"><span>DISTRIBUTION</span><div>{Array.from({length: 30}, (_, index) => <i key={index} style={{left: `${(index * 37) % 91}%`, top: `${18 + ((index * 23) % 65)}%`}}/> )}</div><strong>patterns become visible</strong></div><div className="viz-card bars-viz"><span>INDICATOR MIX</span><div>{[46, 72, 57, 88, 66, 78].map((height, index) => <i key={index} style={{height: `${height}%`}}/> )}</div><strong>simple, useful, clear</strong></div></div></section>
     <section className="section future"><SectionLabel index="07">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>Estoy construyendo la siguiente etapa con disciplina: profundizar en Python, estadística, automatización y análisis avanzado sin perder el contacto con los problemas del negocio.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL", "Power BI", "Excel", "Data Cleaning", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
-    <section id="experience" className="section experience"><SectionLabel index="08">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experiencia<br/><span>que acumula contexto.</span></h2><p>De operaciones e inventarios al análisis de información tributaria. Cada etapa dejó una forma más precisa de leer los datos.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Analista Encargado de Almacén</p><small>Inventario · análisis histórico · optimización de procesos</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Auditor y Administrativo de Almacén</p><small>Auditoría de información · discrepancias · digitalización</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho Chosica</h3><p>Analista Estadístico de Bases de Datos</p><small>SQL Server · Power BI · reportes financieros y tributarios</small></div></article></div></section>
-    <section id="cv" className="section cv-section"><SectionLabel index="09">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>El documento<br/><span>completo.</span></h2><p>Experiencia, formación y herramientas en una sola vista.</p><a className="primary" href="/docs/CV_Christian_Gutierrez.pdf" target="_blank" rel="noreferrer">OPEN CV <ArrowUpRight size={16}/></a></div><iframe className="cv-embed" src="/docs/CV_Christian_Gutierrez.pdf" title="CV de Christian Gutierrez"><a href="/docs/CV_Christian_Gutierrez.pdf">Abrir CV</a></iframe></div></section>
-    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><a className="contact-link" href="mailto:christhiangutierrezrosas@gmail.com">LET'S TALK <ArrowUpRight/></a><div className="contact-emails"><a href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com</a><a href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com</a></div><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a><a href="mailto:christhiangutierrezrosas@gmail.com" aria-label="Email"><Mail/></a></div></div></section>
+    <section id="experience" className="section experience"><SectionLabel index="08">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experiencia<br/><span>que acumula contexto.</span></h2><p>De operaciones e inventarios al análisis de información tributaria y al desarrollo de soluciones digitales. Cada etapa dejó una forma más precisa de leer los datos.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Analista Encargado de Almacén</p><small>Inventario · análisis histórico · optimización de procesos</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Auditor y Administrativo de Almacén</p><small>Auditoría de información · discrepancias · digitalización</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho-Chosica</h3><p>Analista de Datos / Analista Estadístico de Bases de Datos</p><small>SQL Server · Power BI · DAX · Excel · ETL · Power Query · Python</small></div></article><article><span>SOFTWARE / SAAS</span><i/><div><h3>FactuOnLine</h3><p>Software / SaaS Developer</p><small>React · NestJS · TypeScript · PostgreSQL · SaaS · REST APIs</small></div></article></div></section>
+    <section id="cv" className="section cv-section"><SectionLabel index="09">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>El documento<br/><span>completo.</span></h2><p>Experiencia, formación y herramientas en una sola vista.</p><a className="primary" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DESCARGAR CV <ArrowDown size={16}/></a></div><iframe className="cv-embed" src="/cv/christian-gutierrez-cv.pdf#view=FitH&toolbar=0&navpanes=0&scrollbar=0" title="Vista previa del CV de Christian Gutierrez" scrolling="no"><a href="/cv/christian-gutierrez-cv.pdf">Abrir CV</a></iframe></div></section>
+    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><div className="contact-emails"><a href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com</a><a href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com</a></div><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a></div></div></section>
   </main><footer><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>;
 }
 

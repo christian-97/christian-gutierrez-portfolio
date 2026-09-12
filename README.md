@@ -1,7 +1,5 @@
 # Christian Gutierrez — Portfolio
 
-Portafolio personal inspirado en la estructura editorial y de portfolio de Yan Holtz, pero con identidad, contenido y proyectos propios.
-
 ## Stack
 - React
 - Vite
