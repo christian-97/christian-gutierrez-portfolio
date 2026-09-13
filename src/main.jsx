@@ -2,79 +2,81 @@ import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ArrowDown, ArrowUpRight, Check, ChevronDown, Database, Github, Linkedin, Menu, MoveUpRight, Play, X } from "lucide-react";
 import "./styles.css";
+import { FactuOnlineCaseStudy } from "./FactuOnlineCaseStudy.jsx";
 
 const toolkit = [
   {
     name: "SQL Server",
-    desc: "Consultas y preparación de datos.",
-    tech: "SQL · ETL · Transformación · Reporting",
+    tech: "Queries · Joins · CTEs · ETL · Optimization",
     color: "mint"
   },
   {
     name: "Power BI",
-    desc: "Dashboards y análisis de información.",
-    tech: "Modelado · DAX · KPIs · Visualización",
+    tech: "Modeling · DAX · KPIs · Dashboards · Data Visualization",
     color: "blue"
   },
   {
     name: "Python",
-    desc: "Exploración y análisis de datos.",
-    tech: "Pandas · Cleaning · Analysis · Visualization",
+    tech: "Pandas · NumPy · Data Cleaning · EDA · Visualization",
     color: "yellow"
   },
   {
     name: "Excel",
-    desc: "Análisis operativo y validación.",
-    tech: "Tablas dinámicas · Fórmulas · Conciliación",
+    tech: "Pivot Tables · Formulas · Power Query · Reconciliation · Reporting",
     color: "mint"
   },
   {
     name: "DAX",
-    desc: "Métricas y lógica de negocio.",
-    tech: "Medidas · Time Intelligence · KPIs",
+    tech: "Measures · CALCULATE · Time Intelligence · Context · KPIs",
     color: "blue"
   },
   {
     name: "Power Query",
-    desc: "Limpieza y transformación de datos.",
-    tech: "Extracción · Normalización · Modelado M",
+    tech: "ETL · Cleaning · Transformation · Merge · Automation",
     color: "yellow"
   },
   {
-    name: "VS Community · SSIS",
-    desc: "Integración y procesamiento de datos.",
-    tech: "ETL · Extract · Transform · Load",
+    name: "SSIS",
+    tech: "ETL · Data Integration · Packages · Transform · Load",
     color: "purple"
   },
   {
+    name: "Visual Studio Community",
+    tech: "Development · Debugging · Build · C# · .NET",
+    color: "purple"
+  },
+  {
+    name: "PostgreSQL",
+    tech: "SQL · Modeling · Joins · Relationships · Queries",
+    color: "blue"
+  },
+  {
     name: "React",
-    desc: "Desarrollo de interfaces y vistas web.",
-    tech: "Componentes · Estado · UI interactiva",
+    tech: "Components · State · Hooks · UI · Frontend",
     color: "mint"
   },
   {
-    name: "GitHub",
-    desc: "Control de versiones y repositorios.",
-    tech: "Git · Commits · Branching · Código",
-    color: "mint"
+    name: "NestJS",
+    tech: "REST APIs · Modules · Services · Backend · TypeScript",
+    color: "purple"
   }
 ];
 
 
 const pipeline = [
-  ["SOURCE", "Archivos CSV, Excel y bases de datos."], ["EXTRACT", "Obtención de datos desde bases de datos y archivos mediante SSIS y consultas SQL."], ["TRANSFORM", "Limpieza, normalización y preparación de datos."], ["VALIDATE", "Revisión de calidad, consistencia y valores faltantes."], ["MODEL", "Construcción de modelos para análisis."], ["VISUALIZE", "Conversión de datos en información comprensible."], ["INSIGHT", "Una lectura clara para decidir mejor."]
+  ["SOURCE", "CSV, Excel files, and relational databases."], ["EXTRACT", "Data extraction from databases and files using SSIS and SQL queries."], ["TRANSFORM", "Data cleaning, normalization, and preparation."], ["VALIDATE", "Quality checks, consistency validation, and missing value handling."], ["MODEL", "Analytical modeling and relationship design."], ["VISUALIZE", "Transforming data into intuitive, clear visual narratives."], ["INSIGHT", "Actionable findings that empower strategic business decisions."]
 ];
 
 const projects = [
-  { number: "01", title: "FactuOnLine", type: "SOFTWARE / SAAS", description: "Plataforma SaaS multiempresa para facturación electrónica y gestión comercial, desarrollada con arquitectura Multi-Tenant.", tags: ["React", "NestJS", "TypeScript", "PostgreSQL", "REST APIs"], chart: "system" },
-  { number: "02", title: "Dashboard de Recaudación Municipal", type: "DATA ANALYTICS / BI", description: "Análisis y visualización de información tributaria y financiera para apoyar el seguimiento de recaudación e indicadores de gestión.", tags: ["SQL Server", "SSIS", "Power BI", "DAX", "ETL"], chart: "municipal" },
-  { number: "03", title: "Análisis de Deuda Tributaria", type: "DATA ANALYTICS", description: "Análisis de información tributaria para apoyar el seguimiento y la lectura de indicadores de gestión.", tags: ["SQL Server", "Excel", "Power Query", "Power BI"], chart: "municipal" },
-  { number: "04", title: "Data Analysis Lab", type: "DATA EXPLORATION", description: "Espacio de exploración para preparar, validar y convertir datos en hallazgos accionables.", tags: ["Python", "ETL", "Data Analysis", "Visualization"], chart: "inventory" },
-  { number: "05", title: "BI Comercial", type: "BUSINESS INTELLIGENCE", description: "Reportes y visualizaciones orientadas a comprender indicadores comerciales y apoyar decisiones.", tags: ["Power BI", "DAX", "Excel", "Data Visualization"], chart: "municipal" },
-  { number: "06", title: "SQL Reporting", type: "DATA REPORTING", description: "Consultas y reportes para transformar datos operativos en información clara y utilizable.", tags: ["SQL Server", "SSIS", "ETL", "Power Query", "Reporting"], chart: "inventory" }
+  { number: "01", title: "FactuOnLine", type: "SOFTWARE / SAAS", description: "Multi-tenant SaaS platform for electronic invoicing and commercial management, developed with scalable multi-tenant architecture.", tags: ["React", "NestJS", "TypeScript", "PostgreSQL", "REST APIs"], chart: "system" },
+  { number: "02", title: "Municipal Revenue Dashboard", type: "DATA ANALYTICS / BI", description: "Analysis and interactive visualization of municipal tax and financial data to monitor revenue collection and management KPIs.", tags: ["SQL Server", "SSIS", "Power BI", "DAX", "ETL"], chart: "municipal" },
+  { number: "03", title: "Tax Debt Analysis", type: "DATA ANALYTICS", description: "Tax data analysis and debt tracking to provide actionable insights for municipal fiscal administration.", tags: ["SQL Server", "Excel", "Power Query", "Power BI"], chart: "municipal" },
+  { number: "04", title: "Data Analysis Lab", type: "DATA EXPLORATION", description: "Exploratory environment to inspect, validate, and convert complex datasets into actionable findings.", tags: ["Python", "ETL", "Data Analysis", "Visualization"], chart: "inventory" },
+  { number: "05", title: "Commercial BI", type: "BUSINESS INTELLIGENCE", description: "Interactive dashboards and reports focused on tracking commercial performance and driving strategic decisions.", tags: ["Power BI", "DAX", "Excel", "Data Visualization"], chart: "municipal" },
+  { number: "06", title: "SQL Reporting", type: "DATA REPORTING", description: "Advanced SQL queries and automated ETL packages transforming operational data into clear, reliable reporting.", tags: ["SQL Server", "SSIS", "ETL", "Power Query", "Reporting"], chart: "inventory" }
 ];
 
-function useReveal() {
+function useReveal(deps) {
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
@@ -82,7 +84,7 @@ function useReveal() {
     }), { threshold: 0.12 });
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [deps]);
 }
 
 function SectionLabel({ index, children }) { return <div className="section-label"><span>{index}</span>{children}</div>; }
@@ -282,7 +284,7 @@ function DataNetwork() {
     };
   }, []);
 
-  return <div className="network-wrap" aria-label="Visualización abstracta del flujo de datos"><div className="network-top"><span><i className="live-dot"/> LIVE DATA</span><span>01 — 07</span></div><canvas ref={canvasRef} className="network" aria-hidden="true"/><div className="network-caption"><span>recaudacion_2026.csv</span><strong>DATA <b>→</b> PROCESS <b>→</b> INSIGHT</strong></div></div>;
+  return <div className="network-wrap" aria-label="Abstract visualization of data flow"><div className="network-top"><span><i className="live-dot"/> LIVE DATA</span><span>01 — 07</span></div><canvas ref={canvasRef} className="network" aria-hidden="true"/><div className="network-caption"><span>recaudacion_2026.csv</span><strong>DATA <b>→</b> PROCESS <b>→</b> INSIGHT</strong></div></div>;
 }
 
 function ProfilePhoto() {
@@ -306,7 +308,7 @@ function ProfilePhoto() {
                 <path d="M4 36c0-8.284 6.716-15 15-15s15 6.716 15 15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
               </svg>
             </div>
-            <span className="profile-placeholder-label">FOTO DE PERFIL</span>
+            <span className="profile-placeholder-label">PROFILE PHOTO</span>
             <span className="profile-placeholder-path">/images/image.png</span>
           </div>
         )}
@@ -407,6 +409,19 @@ const TOOL_ICONS = {
       <ellipse cx="12" cy="8" rx="7" ry="2.5" stroke="currentColor" strokeWidth="1.3" fill="none"/>
     </svg>
   ),
+  "Visual Studio Community": (
+    <svg viewBox="0 0 96 96" width="20" height="20" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M68.9 95.6a6 6 0 003.9-.4L92.6 85.6A6 6 0 0096 80.2V15.8a6 6 0 00-3.4-5.4L72.8.8A6 6 0 0066 2L34.1 37.3 15.5 22l-1.6-1.4a4 4 0 00-3.6-.8l-.5.2L2.5 23A4 4 0 000 26.7v.3V69v.3A4 4 0 002.5 73l7.3 3 .5.2a4 4 0 003.6-.8L15.5 74l18.6-15.3L66 94a6 6 0 002.9 1.6z" fill="#52218a"/>
+      <path d="M72 27.7L47.2 48 72 68.3V27.7z" fill="#6c33af"/>
+      <path d="M12 34.3L24.4 48 12 61.7V34.3z" fill="#854cc7"/>
+      <path d="M68.9 95.6a6 6 0 003.9-.4L92.6 85.6A6 6 0 0096 80.2V15.8a6 6 0 00-3.4-5.4L72.8.8a6 6 0 00-4.5-.3L72 27.7 47.2 48 72 68.3v.1L68.3 95.5z" fill="#b179f1"/>
+    </svg>
+  ),
+  "NestJS": (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+      <path d="M14.131.047c-.173 0-.334.037-.483.087.316.21.49.49.576.806.007.043.019.074.025.117a.681.681 0 0 1 .013.112c.024.545-.143.614-.26.936-.18.415-.13.861.086 1.22a.74.74 0 0 0 .074.137c-.235-1.568 1.073-1.803 1.314-2.293.019-.428-.334-.713-.613-.911a1.37 1.37 0 0 0-.732-.21zM16.102.4c-.024.143-.006.106-.012.18-.006.05-.006.112-.012.161-.013.05-.025.1-.044.149-.012.05-.03.1-.05.149l-.067.142c-.02.025-.031.05-.05.075l-.037.055a2.152 2.152 0 0 1-.093.124c-.037.038-.068.081-.112.112v.006c-.037.031-.074.068-.118.1-.13.099-.278.173-.415.266-.043.03-.087.056-.124.093a.906.906 0 0 0-.118.099c-.043.037-.074.074-.111.118-.031.037-.068.08-.093.124a1.582 1.582 0 0 0-.087.13c-.025.05-.043.093-.068.142-.019.05-.037.093-.05.143a2.007 2.007 0 0 0-.043.155c-.006.025-.006.056-.012.08-.007.025-.007.05-.013.075 0 .05-.006.105-.006.155 0 .037 0 .074.006.111 0 .05.006.1.019.155.006.05.018.1.03.15.02.049.032.098.05.148.013.03.031.062.044.087l-1.426-.552c-.241-.068-.477-.13-.719-.186l-.39-.093c-.372-.074-.75-.13-1.128-.167-.013 0-.019-.006-.031-.006A11.082 11.082 0 0 0 8.9 2.855c-.378.025-.756.074-1.134.136a12.45 12.45 0 0 0-.837.174l-.279.074c-.092.037-.18.08-.266.118l-.205.093c-.012.006-.024.006-.03.012-.063.031-.118.056-.174.087a2.738 2.738 0 0 0-.236.118c-.043.018-.086.043-.124.062a.559.559 0 0 1-.055.03c-.056.032-.112.063-.162.094a1.56 1.56 0 0 0-.148.093c-.044.03-.087.055-.124.086-.006.007-.013.007-.019.013-.037.025-.08.056-.118.087l-.012.012-.093.074c-.012.007-.025.019-.037.025-.031.025-.062.056-.093.08-.006.013-.019.02-.025.025-.037.038-.074.069-.111.106-.007 0-.007.006-.013.012a1.742 1.742 0 0 0-.111.106c-.007.006-.007.012-.013.012a1.454 1.454 0 0 0-.093.1c-.012.012-.03.024-.043.036a1.374 1.374 0 0 1-.106.112c-.006.012-.018.019-.024.03-.05.05-.093.1-.143.15l-.018.018c-.1.106-.205.211-.317.304-.111.1-.229.192-.347.273a3.777 3.777 0 0 1-.762.421c-.13.056-.267.106-.403.149-.26.056-.527.161-.756.18-.05 0-.105.012-.155.018l-.155.037-.149.056c-.05.019-.099.044-.148.068-.044.031-.093.056-.137.087a1.011 1.011 0 0 0-.124.106c-.043.03-.087.074-.124.111-.037.043-.074.08-.105.124-.031.05-.068.093-.093.143a1.092 1.092 0 0 0-.087.142c-.025.056-.05.106-.068.161-.019.05-.037.106-.056.161-.012.05-.025.1-.03.15 0 .005-.007.012-.007.018-.012.056-.012.13-.019.167C.006 7.95 0 7.986 0 8.03a.657.657 0 0 0 .074.31v.006c.019.037.044.075.069.112.024.037.05.074.08.111.031.031.068.069.106.1a.906.906 0 0 0 .117.099c.149.13.186.173.378.272.031.019.062.031.1.05.006 0 .012.006.018.006 0 .013 0 .019.006.031a1.272 1.272 0 0 0 .08.298c.02.037.032.074.05.111.007.013.013.025.02.031.024.05.049.093.073.137l.093.13c.031.037.069.08.106.118.037.037.074.068.118.105 0 0 .006.006.012.006.037.031.074.062.112.087a.986.986 0 0 0 .136.08c.043.025.093.05.142.069a.73.73 0 0 0 .124.043c.007.006.013.006.025.012.025.007.056.013.08.019-.018.335-.024.65.026.762.055.124.328-.254.6-.688-.036.428-.061.93 0 1.079.069.155.44-.329.763-.862 4.395-1.016 8.405 2.02 8.826 6.31-.08-.67-.905-1.041-1.283-.948-.186.458-.502 1.047-1.01 1.413.043-.41.025-.83-.062-1.24a4.009 4.009 0 0 1-.769 1.562c-.588.043-1.177-.242-1.487-.67-.025-.018-.031-.055-.05-.08-.018-.043-.037-.087-.05-.13a.515.515 0 0 1-.037-.13c-.006-.044-.006-.087-.006-.137v-.093a.992.992 0 0 1 .031-.13c.013-.043.025-.086.044-.13.024-.043.043-.087.074-.13.105-.298.105-.54-.087-.682a.706.706 0 0 0-.118-.062c-.024-.006-.055-.018-.08-.025l-.05-.018a.847.847 0 0 0-.13-.031.472.472 0 0 0-.13-.019 1.01 1.01 0 0 0-.136-.012c-.031 0-.062.006-.093.006a.484.484 0 0 0-.137.019c-.043.006-.086.012-.13.024a1.068 1.068 0 0 0-.13.044c-.043.018-.08.037-.124.056-.037.018-.074.043-.118.062-1.444.942-.582 3.148.403 3.787-.372.068-.75.148-.855.229l-.013.012c.267.161.546.298.837.416.397.13.818.247 1.004.297v.006a5.996 5.996 0 0 0 1.562.112c2.746-.192 4.996-2.281 5.405-5.033l.037.161c.019.112.043.23.056.347v.006c.012.056.018.112.025.162v.024c.006.056.012.112.012.162.006.068.012.136.012.204v.1c0 .03.007.067.007.098 0 .038-.007.075-.007.112v.087c0 .043-.006.08-.006.124 0 .025 0 .05-.006.08 0 .044-.006.087-.006.137-.006.018-.006.037-.006.055l-.02.143c0 .019 0 .037-.005.056-.007.062-.019.118-.025.18v.012l-.037.174v.018l-.037.167c0 .007-.007.02-.007.025a1.663 1.663 0 0 1-.043.168v.018c-.019.062-.037.118-.05.174-.006.006-.006.012-.006.012l-.056.186c-.024.062-.043.118-.068.18-.025.062-.043.124-.068.18-.025.062-.05.117-.074.18h-.007c-.024.055-.05.117-.08.173a.302.302 0 0 1-.019.043c-.006.006-.006.013-.012.019a5.867 5.867 0 0 1-1.742 2.082c-.05.031-.099.069-.149.106-.012.012-.03.018-.043.03a2.603 2.603 0 0 1-.136.094l.018.037h.007l.26-.037h.006c.161-.025.322-.056.483-.087.044-.006.093-.019.137-.031l.087-.019c.043-.006.086-.018.13-.024.037-.013.074-.02.111-.031.62-.15 1.221-.354 1.798-.595a9.926 9.926 0 0 1-3.85 3.142c.714-.05 1.426-.167 2.114-.366a9.903 9.903 0 0 0 5.857-4.68 9.893 9.893 0 0 1-1.667 3.986 9.758 9.758 0 0 0 1.655-1.376 9.824 9.824 0 0 0 2.61-5.268c.21.98.272 1.99.18 2.987 4.474-6.241.371-12.712-1.346-14.416-.006-.013-.012-.019-.012-.031-.006.006-.006.006-.006.012 0-.006 0-.006-.007-.012 0 .074-.006.148-.012.223a8.34 8.34 0 0 1-.062.415c-.03.136-.068.273-.105.41-.044.13-.093.266-.15.396a5.322 5.322 0 0 1-.185.378 4.735 4.735 0 0 1-.477.688c-.093.111-.192.21-.292.31a3.994 3.994 0 0 1-.18.155l-.142.124a3.459 3.459 0 0 1-.347.241 4.295 4.295 0 0 1-.366.211c-.13.062-.26.118-.39.174a4.364 4.364 0 0 1-.818.223c-.143.025-.285.037-.422.05a4.914 4.914 0 0 1-.297.012 4.66 4.66 0 0 1-.422-.025 3.137 3.137 0 0 1-.421-.062 3.136 3.136 0 0 1-.415-.105h-.007c.137-.013.273-.025.41-.05a4.493 4.493 0 0 0 .818-.223c.136-.05.266-.112.39-.174.13-.062.248-.13.372-.204.118-.08.235-.161.347-.248.112-.087.217-.18.316-.279.105-.093.198-.198.291-.304.093-.111.18-.223.26-.334.013-.019.026-.044.038-.062.062-.1.124-.199.18-.298a4.272 4.272 0 0 0 .334-.775c.044-.13.075-.266.106-.403.025-.142.05-.278.062-.415.012-.142.025-.285.025-.421 0-.1-.007-.199-.013-.298a6.726 6.726 0 0 0-.05-.415 4.493 4.493 0 0 0-.092-.415c-.044-.13-.087-.267-.137-.397-.05-.13-.111-.26-.173-.384-.069-.124-.137-.248-.211-.366a6.843 6.843 0 0 0-.248-.34c-.093-.106-.186-.212-.285-.317a3.878 3.878 0 0 0-.161-.155c-.28-.217-.57-.421-.862-.607a1.154 1.154 0 0 0-.124-.062 2.415 2.415 0 0 0-.589-.26Z"/>
+    </svg>
+  ),
 };
 
 function ToolkitCard({ item }) {
@@ -415,7 +430,6 @@ function ToolkitCard({ item }) {
     <div className="tool-card">
       <span className={`tool-icon ${item.color}`}>{icon ?? null}</span>
       <span className="tool-name">{item.name}</span>
-      <p className="tool-desc">{item.desc}</p>
       <span className="tool-tags">{item.tech}</span>
     </div>
   );
@@ -427,19 +441,171 @@ function DataLab() {
 }
 
 function ProjectChart({ type }) {
-  if (type === "system") return <div className="system-visual"><div className="system-node">CLIENT</div><i/><div className="system-node active">API</div><i/><div className="system-node">DATABASE</div><div className="system-orbit">MULTI-TENANT</div></div>;
+  if (type === "system") {
+    return (
+      <div className="system-visual factu-arch">
+        <div className="factu-tree-container">
+          {/* TIER 1: PLATFORM */}
+          <div className="factu-t1">
+            <div className="factu-box platform">
+              <span className="factu-dot" />
+              <div className="factu-box-info">
+                <strong>FACTUONLINE</strong>
+                <small>PLATFORM</small>
+              </div>
+            </div>
+          </div>
+
+          {/* CONNECTOR 1: PLATFORM -> CLIENT & API */}
+          <div className="factu-wire-wrap">
+            <svg viewBox="0 0 600 14" fill="none" className="factu-wire-svg" preserveAspectRatio="none">
+              <line x1="300" y1="0" x2="300" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="150" y1="7" x2="450" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="150" y1="7" x2="150" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="146,10 150,14 154,10" fill="currentColor" />
+              <line x1="450" y1="7" x2="450" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="446,10 450,14 454,10" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* TIER 2: CLIENT & API */}
+          <div className="factu-t2">
+            <div className="factu-col">
+              <div className="factu-box client">
+                <strong>CLIENT</strong>
+                <small>React</small>
+              </div>
+            </div>
+            <div className="factu-col">
+              <div className="factu-box api">
+                <strong>API</strong>
+                <small>NestJS</small>
+              </div>
+            </div>
+          </div>
+
+          {/* CONNECTOR 2: API -> 3 MODULES */}
+          <div className="factu-wire-wrap">
+            <svg viewBox="0 0 600 14" fill="none" className="factu-wire-svg" preserveAspectRatio="none">
+              <line x1="450" y1="0" x2="450" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="100" y1="7" x2="500" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="100" y1="7" x2="100" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="96,10 100,14 104,10" fill="currentColor" />
+              <line x1="300" y1="7" x2="300" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="296,10 300,14 304,10" fill="currentColor" />
+              <line x1="500" y1="7" x2="500" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="496,10 500,14 504,10" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* TIER 3: BILLING, COMMERCIAL, TENANT */}
+          <div className="factu-t3">
+            <div className="factu-col">
+              <div className="factu-box module">
+                <strong>BILLING SERVICE</strong>
+                <small>PHP · Invoicing</small>
+              </div>
+            </div>
+            <div className="factu-col">
+              <div className="factu-box module">
+                <strong>COMMERCIAL</strong>
+                <small>Orders & Modules</small>
+              </div>
+            </div>
+            <div className="factu-col">
+              <div className="factu-box module">
+                <strong>TENANT / PROV</strong>
+                <small>Multi-Tenant</small>
+              </div>
+            </div>
+          </div>
+
+          {/* CONNECTOR 3: 3 MODULES -> DATABASE */}
+          <div className="factu-wire-wrap">
+            <svg viewBox="0 0 600 14" fill="none" className="factu-wire-svg" preserveAspectRatio="none">
+              <line x1="100" y1="0" x2="100" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="300" y1="0" x2="300" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="500" y1="0" x2="500" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="100" y1="7" x2="500" y2="7" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="300" y1="7" x2="300" y2="14" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
+              <polygon points="296,10 300,14 304,10" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* TIER 4: DATABASE */}
+          <div className="factu-t4">
+            <div className="factu-box database">
+              <strong>DATABASE</strong>
+              <small>PostgreSQL</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   const bars = type === "inventory" ? [42, 72, 56, 84, 63, 91, 70] : [34, 50, 44, 68, 53, 79, 88];
   return <div className="project-chart"><div className="chart-kpi"><span>{type === "inventory" ? "STOCK FLOW" : "REVENUE TREND"}</span><strong>{type === "inventory" ? "ANALYSIS" : "TRACKING"}</strong></div><div className="chart-grid"><svg viewBox="0 0 300 100" preserveAspectRatio="none"><polyline points={bars.map((value, index) => `${index * 50},${100 - value}`).join(" ")} /></svg>{bars.map((value, index) => <i key={index} style={{height: `${value}%`}}/> )}</div><div className="chart-axis"><span>JAN</span><span>MAR</span><span>JUN</span><span>SEP</span><span>DEC</span></div></div>;
 }
 
 function App() {
+  const [view, setView] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.location.hash === "#factuonline" ? "factuonline" : "portfolio";
+    }
+    return "portfolio";
+  });
   const [open, setOpen] = useState(false);
   const [pipelineActive, setPipelineActive] = useState(2);
-  useReveal();
+  useReveal(view);
+
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === "#factuonline") {
+        setView("factuonline");
+        window.scrollTo(0, 0);
+      } else {
+        setView("portfolio");
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener("hashchange", handleHash);
+    window.addEventListener("popstate", handleHash);
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+      window.removeEventListener("popstate", handleHash);
+    };
+  }, []);
+
+  const navigateToCaseStudy = () => {
+    window.location.hash = "factuonline";
+    setView("factuonline");
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToPortfolio = () => {
+    setView("portfolio");
+    if (window.location.hash) {
+      try {
+        history.pushState(null, "", window.location.pathname + window.location.search);
+      } catch {
+        window.location.hash = "";
+      }
+    }
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+    });
+  };
+
   const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setOpen(false); };
-  return <div className="site"><header className="nav"><button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button><nav className={open ? "navlinks open" : "navlinks"}><button onClick={() => scrollTo("about")}>ABOUT</button><button onClick={() => scrollTo("experience")}>EXPERIENCE</button><button onClick={() => scrollTo("projects")}>PROJECTS</button><button onClick={() => scrollTo("lab")}>DATA LAB</button><button onClick={() => scrollTo("contact")}>CONTACT</button></nav><button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button></header><main>
-    <section id="home" className="hero section"><div className="hero-inner"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST · BI DEVELOPER</strong><span>ASPIRING DATA SCIENTIST</span></div><p>Combino Data Analytics, Business Intelligence, visualización de datos, Data Engineering y desarrollo de software para transformar información en insights, decisiones y mejores sistemas.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><a className="text-btn" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DESCARGAR CV <ArrowDown size={16}/></a><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><ProfilePhoto/></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA <b>/</b> SSIS </span></div></section>
-    <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>La curiosidad<br/><span>se volvió método.</span></h2><p>Trabajo con datos reales y problemas reales, buscando entender la información, encontrar patrones y convertirlos en insights para tomar mejores decisiones.</p></div>        <div className="journey">
+
+  return (
+    <>
+      <div className="site" style={{ display: view === "factuonline" ? "none" : "block" }}>
+        <header className="nav"><button className="brand" onClick={() => scrollTo("home")}>CHRISTIAN<span>.</span></button><nav className={open ? "navlinks open" : "navlinks"}><button onClick={() => scrollTo("about")}>ABOUT</button><button onClick={() => scrollTo("experience")}>EXPERIENCE</button><button onClick={() => scrollTo("projects")}>PROJECTS</button>{/* <button onClick={() => scrollTo("lab")}>DATA LAB</button> */}<button onClick={() => scrollTo("contact")}>CONTACT</button></nav><button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button></header><main>
+          <section id="home" className="hero section"><div className="hero-inner"><div className="hero-copy reveal"><div className="eyebrow"><i className="live-dot"/> DATA ANALYST / LIMA, PERU</div><h1>CHRISTIAN<br/><em>GUTIERREZ</em></h1><div className="hero-role"><strong>DATA ANALYST · BI DEVELOPER</strong><span>ASPIRING DATA SCIENTIST</span></div><p>I combine Data Analytics, Business Intelligence, data visualization, Data Engineering, and software development to transform information into actionable insights, strategic decisions, and robust systems.</p><div className="hero-actions"><button className="primary" onClick={() => scrollTo("projects")}>VIEW MY WORK <ArrowDown size={16}/></button><a className="text-btn" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DOWNLOAD CV <ArrowDown size={16}/></a><button className="text-btn" onClick={() => scrollTo("contact")}>CONTACT ME <ArrowUpRight size={16}/></button></div></div><ProfilePhoto/></div><DataNetwork/><div className="hero-foot"><span>SCROLL TO EXPLORE</span><span>SQL <b>/</b> POWER BI <b>/</b> PYTHON <b>/</b> DATA <b>/</b> SSIS </span></div></section>
+    <section id="about" className="section story"><SectionLabel index="01">FROM OPERATIONS TO DATA</SectionLabel><div className="story-grid reveal"><div><h2>Curiosity<br/><span>became method.</span></h2><p>I work with real data and real problems, striving to understand information, uncover patterns, and turn them into actionable insights for better decisions.</p></div>        <div className="journey">
           <div className="journey-line"/>
           <div className="journey-step"><span>01</span><strong>INVENTORY</strong><small>Operations & control</small></div>
           <div className="journey-step"><span>02</span><strong>DATA MANAGEMENT</strong><small>Quality & structure</small></div>
@@ -447,16 +613,19 @@ function App() {
           <div className="journey-step current"><span>04</span><strong>BUSINESS INTELLIGENCE</strong><small>Power BI & decisions</small></div>
           <div className="journey-step next"><span>05</span><strong>DATA SCIENCE</strong><small>Python & statistics</small></div>
         </div></div></section>
-    <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Herramientas para<br/><span>ver lo que importa.</span></h2><p>SQL Server, Power BI, DAX, Power Query, Excel avanzado, Python, ETL y SSIS para datos; React, NestJS, TypeScript, PostgreSQL, REST APIs y Git / GitHub para soluciones digitales.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
-    <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>Una pequeña<br/><span>mesa de análisis.</span></h2><p>Una simulación visual de cómo pienso un dataset antes de convertirlo en una decisión. Demo con datos ficticios.</p></div><div className="reveal"><DataLab/></div></section>
-    <section className="section pipeline-section"><SectionLabel index="04">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>Del archivo al<br/><span>insight.</span></h2><p>La calidad de una visualización empieza mucho antes del gráfico.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
-    <section id="projects" className="section projects"><SectionLabel index="05">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Casos donde los<br/><span>datos hacen algo.</span></h2><p>Proyectos construidos desde la realidad operativa: información, sistemas y decisiones conectados.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a href="#contact" className="case-link">VIEW CASE <ArrowUpRight size={16}/></a></div><ProjectChart type={project.chart}/></div></article>)}</div></section>
-    <section className="section viz-section"><SectionLabel index="06">DATA VISUALIZATION</SectionLabel><div className="viz-heading reveal"><h2>Leer patrones.<br/><span>Contar historias.</span></h2><div className="viz-note"><span><i className="live-dot"/> VISUAL STUDY / 2026</span><p>Visualizaciones conceptuales inspiradas en el trabajo diario con indicadores, tendencias y distribuciones.</p></div></div><div className="viz-grid reveal"><div className="viz-card line-viz"><span>MONTHLY TREND</span><svg viewBox="0 0 400 150" preserveAspectRatio="none"><path d="M0 124 C40 118 45 90 82 101 S128 74 156 88 S200 54 237 69 S281 31 314 52 S355 28 400 10"/></svg><strong>+ insight over time</strong></div><div className="viz-card scatter-viz"><span>DISTRIBUTION</span><div>{Array.from({length: 30}, (_, index) => <i key={index} style={{left: `${(index * 37) % 91}%`, top: `${18 + ((index * 23) % 65)}%`}}/> )}</div><strong>patterns become visible</strong></div><div className="viz-card bars-viz"><span>INDICATOR MIX</span><div>{[46, 72, 57, 88, 66, 78].map((height, index) => <i key={index} style={{height: `${height}%`}}/> )}</div><strong>simple, useful, clear</strong></div></div></section>
-    <section className="section future"><SectionLabel index="07">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>Estoy construyendo la siguiente etapa con disciplina: profundizar en Python, estadística, automatización y análisis avanzado sin perder el contacto con los problemas del negocio.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL", "Power BI", "Excel", "Data Cleaning", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
-    <section id="experience" className="section experience"><SectionLabel index="08">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experiencia<br/><span>que acumula contexto.</span></h2><p>De operaciones e inventarios al análisis de información tributaria y al desarrollo de soluciones digitales. Cada etapa dejó una forma más precisa de leer los datos.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Analista Encargado de Almacén</p><small>Inventario · análisis histórico · optimización de procesos</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Auditor y Administrativo de Almacén</p><small>Auditoría de información · discrepancias · digitalización</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho-Chosica</h3><p>Analista de Datos / Analista Estadístico de Bases de Datos</p><small>SQL Server · Power BI · DAX · Excel · ETL · SSIS · Power Query · Python</small></div></article><article><span>SOFTWARE / SAAS</span><i/><div><h3>FactuOnLine</h3><p>Software / SaaS Developer</p><small>React · NestJS · TypeScript · PostgreSQL · SaaS · REST APIs</small></div></article></div></section>
-    <section id="cv" className="section cv-section"><SectionLabel index="09">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>El documento<br/><span>completo.</span></h2><p>Experiencia, formación y herramientas en una sola vista.</p><a className="primary" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DESCARGAR CV <ArrowDown size={16}/></a></div><iframe className="cv-embed" src="/cv/christian-gutierrez-cv.pdf#view=FitH&toolbar=0&navpanes=0&scrollbar=0" title="Vista previa del CV de Christian Gutierrez" scrolling="no"><a href="/cv/christian-gutierrez-cv.pdf">Abrir CV</a></iframe></div></section>
-    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="10">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Si tienes una pregunta, un dashboard por construir o un problema que entender, conversemos.</p><div className="contact-emails"><a href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com</a><a href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com</a></div><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a></div></div></section>
-  </main><footer><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>;
+    <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Tools to focus on<br/><span>what truly matters.</span></h2><p>SQL Server, Power BI, DAX, Power Query, Advanced Excel, Python, ETL, and SSIS for data; React, NestJS, TypeScript, PostgreSQL, REST APIs, and Git / GitHub for digital solutions.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
+    {/* <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>A compact<br/><span>analysis workspace.</span></h2><p>A visual exploration of how I evaluate a dataset before turning it into a decision. Demo with mock data.</p></div><div className="reveal"><DataLab/></div></section> */}
+    <section className="section pipeline-section"><SectionLabel index="03">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>From raw file to<br/><span>insight.</span></h2><p>Visualization quality begins long before rendering the chart.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
+    <section id="projects" className="section projects"><SectionLabel index="04">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Cases where data<br/><span>drives real action.</span></h2><p>Projects built from operational reality: connecting information, systems, and strategic decisions.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div>{project.title === "FactuOnLine" && (<div className="project-company-ref"><img src="/images/images factuonline/logo.png" alt="I-On Line Software Perú" className="project-company-logo" /><span>I-On Line Software Perú</span></div>)}<h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>{project.title === "FactuOnLine" ? (<a href="#factuonline" onClick={(e) => { e.preventDefault(); navigateToCaseStudy(); }} className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>) : (<a href="#contact" className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>)}</div><ProjectChart type={project.chart}/></div></article>)}</div></section>
+    <section className="section viz-section"><SectionLabel index="05">DATA VISUALIZATION</SectionLabel><div className="viz-heading reveal"><h2>Reading patterns.<br/><span>Telling stories.</span></h2><div className="viz-note"><span><i className="live-dot"/> VISUAL STUDY / 2026</span><p>Conceptual visualizations inspired by daily work with KPIs, trends, and distributions.</p></div></div><div className="viz-grid reveal"><div className="viz-card line-viz"><span>MONTHLY TREND</span><svg viewBox="0 0 400 150" preserveAspectRatio="none"><path d="M0 124 C40 118 45 90 82 101 S128 74 156 88 S200 54 237 69 S281 31 314 52 S355 28 400 10"/></svg><strong>+ insight over time</strong></div><div className="viz-card scatter-viz"><span>DISTRIBUTION</span><div>{Array.from({length: 30}, (_, index) => <i key={index} style={{left: `${(index * 37) % 91}%`, top: `${18 + ((index * 23) % 65)}%`}}/> )}</div><strong>patterns become visible</strong></div><div className="viz-card bars-viz"><span>INDICATOR MIX</span><div>{[46, 72, 57, 88, 66, 78].map((height, index) => <i key={index} style={{height: `${height}%`}}/> )}</div><strong>simple, useful, clear</strong></div></div></section>
+    <section className="section future"><SectionLabel index="06">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>I am building the next stage with discipline: deepening my knowledge in Python, statistics, automation, and advanced analysis while staying closely connected to business needs.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL", "Power BI", "Excel", "Data Cleaning", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
+    <section id="experience" className="section experience"><SectionLabel index="07">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experience that<br/><span>builds deep context.</span></h2><p>From warehouse operations and inventory to municipal tax data analytics and digital software solutions. Every stage shaped a sharper way to interpret data.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Warehouse Operations Analyst</p><small>Inventory · historical analysis · process optimization</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Inventory Auditor & Operations Administrator</p><small>Data auditing · discrepancy analysis · workflow digitization</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho-Chosica</h3><p>Data Analyst / Statistical Database Analyst</p><small>SQL Server · Power BI · DAX · Excel · ETL · SSIS · Power Query · Python</small></div></article><article><span>SOFTWARE / SAAS</span><i/><div><h3>FactuOnLine</h3><p>Software / SaaS Developer</p><small>React · NestJS · TypeScript · PostgreSQL · SaaS · REST APIs</small></div></article></div></section>
+    <section id="cv" className="section cv-section"><SectionLabel index="08">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>The complete<br/><span>document.</span></h2><p>Experience, education, and technical toolkit in a single overview.</p><a className="primary" href="/cv/christian-gutierrez-cv.pdf" target="_blank" rel="noreferrer">DOWNLOAD CV <ArrowDown size={16}/></a></div><iframe className="cv-embed" src="/cv/christian-gutierrez-cv.pdf#view=FitH&toolbar=0&navpanes=0&scrollbar=0" title="Preview of Christian Gutierrez's CV" scrolling="no"><a href="/cv/christian-gutierrez-cv.pdf">Open CV</a></iframe></div></section>
+    <section id="contact" className="contact"><div className="section contact-inner"><SectionLabel index="09">CONTACT</SectionLabel><h2>Let's work<br/><span>with data.</span></h2><p>Whether you have a question, a dashboard to build, or a business problem to solve with data, let's talk.</p><div className="contact-emails"><a href="mailto:christhiangutierrezrosas@gmail.com">christhiangutierrezrosas@gmail.com</a><a href="mailto:christian.gutierrezr@outlook.com">christian.gutierrezr@outlook.com</a></div><div className="socials"><a href="https://www.linkedin.com/in/christhian-jhunior-gutierrez-rosas-281224278/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin/></a><a href="https://github.com/christian-97" target="_blank" rel="noreferrer" aria-label="GitHub"><Github/></a></div></div></section>
+  </main><footer><span>DATA ANALYST / ASPIRING DATA SCIENTIST</span><button onClick={() => scrollTo("home")} aria-label="Back to top"><ChevronDown size={17}/></button></footer></div>
+      {view === "factuonline" && <FactuOnlineCaseStudy onBack={navigateToPortfolio} />}
+    </>
+  );
 }
 
 createRoot(document.getElementById("root")).render(<App />);
