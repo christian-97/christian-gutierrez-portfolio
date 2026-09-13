@@ -13,15 +13,15 @@ function SectionLabel({ index, children }) {
 // Catálogo de rutas de imágenes para FactuOnLine Case Study
 // Directorio físico: public/images/images factuonline/
 export const FACTUONLINE_IMAGES = {
-  main: "/images/images factuonline/factuonline-main.png",
-  architecture: "/images/images factuonline/factuonline-architecture.png",
-  dashboard: "/images/images factuonline/factuonline-dashboard.png",
-  invoicing: "/images/images factuonline/factuonline-invoicing.png",
-  commercial: "/images/images factuonline/factuonline-commercial.png",
-  users: "/images/images factuonline/factuonline-users.png",
-  billing: "/images/images factuonline/factuonline-billing.png",
-  feature: "/images/images factuonline/factuonline-feature.png",
-  logo: "/images/images factuonline/logo.png",
+  main: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-main.png`,
+  architecture: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-architecture.png`,
+  dashboard: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-dashboard.png`,
+  invoicing: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-invoicing.png`,
+  commercial: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-commercial.png`,
+  users: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-users.png`,
+  billing: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-billing.png`,
+  feature: `${import.meta.env.BASE_URL}images/images factuonline/factuonline-feature.png`,
+  logo: `${import.meta.env.BASE_URL}images/images factuonline/logo.png`,
 };
 
 function ImagePlaceholder({ label, sublabel, pathHint, aspectRatio = "16/9", className = "", onClick = null, zoomHint = false }) {
