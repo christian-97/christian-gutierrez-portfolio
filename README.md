@@ -1,5 +1,7 @@
 # Christian Gutierrez — Portfolio
 
+**Live Deployment**: [https://christian-97.github.io/christian-gutierrez-portfolio/](https://christian-97.github.io/christian-gutierrez-portfolio/)
+
 ## Stack
 - React
 - Vite
