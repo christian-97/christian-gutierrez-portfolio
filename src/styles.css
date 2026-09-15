@@ -2229,6 +2229,15 @@
   box-shadow: 0 0 10px rgba(242, 200, 17, 0.08);
 }
 
+.cs-tags .tag-ssis,
+.tags .tag-ssis {
+  border-color: rgba(168, 85, 247, 0.45) !important;
+  color: #c084fc !important;
+  background: rgba(168, 85, 247, 0.1) !important;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+}
+
 .mr-nav-status {
   display: inline-flex;
   align-items: center;
@@ -2253,6 +2262,24 @@
 
 .mr-process-node--pbi:hover {
   border-color: #f2c811;
+}
+
+.mr-process-node--ssis {
+  border-color: rgba(168, 85, 247, 0.45);
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, var(--surface) 100%);
+}
+
+.mr-process-node--ssis .mr-node-badge {
+  color: #c084fc;
+}
+
+.mr-process-node--ssis .mr-node-icon {
+  color: #c084fc;
+}
+
+.mr-process-node--ssis:hover {
+  border-color: #c084fc;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
 }
 
 .mr-placeholder-icon--pbi {
@@ -2430,6 +2457,29 @@
   font-weight: 600;
 }
 
+/* SSIS Highlighted Node */
+.pipe-node--ssis {
+  border-color: rgba(168, 85, 247, 0.45);
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.12) 0%, rgba(17, 24, 32, 0.92) 100%);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.12);
+}
+
+.pipe-node--ssis .pipe-node-left strong {
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.pipe-node--ssis .pipe-node-icon {
+  color: #c084fc;
+}
+
+.pipe-phase--ssis {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.32);
+  font-weight: 600;
+}
+
 .pipe-node--pbi:hover {
   border-color: #f2c811;
   box-shadow: 0 0 18px rgba(242, 200, 17, 0.22);
@@ -2453,6 +2503,215 @@
   .pipe-node-phase {
     font-size: 7.5px;
     padding: 1px 4px;
+  }
+}
+
+/* =========================================================
+   MUNICIPAL REVENUE: DATA MODEL SECTION STYLES
+   ========================================================= */
+.mr-model-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .mr-model-grid {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: start;
+  }
+}
+
+.mr-model-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mr-model-tech-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mr-tech-card-label {
+  font: 600 10px var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--mint);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.mr-arch-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font: 600 11px var(--mono);
+  color: var(--text);
+  background: var(--bg);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+.mr-arch-arr {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.mr-tech-note {
+  display: block;
+  font: 11px var(--mono);
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.mr-tech-card-divider {
+  height: 1px;
+  background: var(--line);
+}
+
+.mr-tech-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mr-tech-bullet-list li {
+  font-size: 13px;
+  color: var(--text-sub);
+  position: relative;
+  padding-left: 14px;
+  line-height: 1.4;
+}
+
+.mr-tech-bullet-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--mint);
+}
+
+.mr-shared-model-block {
+  margin-top: 36px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 28px;
+}
+
+.mr-shared-model-header h3 {
+  font-size: 18px;
+  color: var(--text);
+  margin: 8px 0 4px;
+}
+
+.mr-shared-model-header p {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.mr-shared-badge {
+  font: 500 9px var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--blue);
+  border: 1px solid rgba(99, 179, 237, 0.3);
+  padding: 3px 8px;
+  background: rgba(99, 179, 237, 0.06);
+}
+
+.mr-shared-diagram {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.mr-shared-source-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--blue);
+  padding: 10px 22px;
+  font: 600 12px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  box-shadow: 0 0 16px rgba(99, 179, 237, 0.12);
+}
+
+.mr-shared-arrows {
+  width: 100%;
+  max-width: 680px;
+  height: 24px;
+}
+
+.mr-shared-arrows-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.mr-shared-targets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.mr-shared-target {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.mr-shared-target--active {
+  border-color: rgba(242, 200, 17, 0.45);
+  background: rgba(242, 200, 17, 0.04);
+}
+
+.mr-shared-target strong {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.mr-shared-target small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.mr-target-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f2c811;
+  box-shadow: 0 0 6px rgba(242, 200, 17, 0.8);
+}
+
+@media (max-width: 640px) {
+  .mr-shared-model-block {
+    padding: 20px 16px;
+  }
+  .mr-shared-arrows {
+    display: none;
+  }
+  .mr-shared-diagram {
+    gap: 16px;
   }
 }
 

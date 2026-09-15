@@ -33,6 +33,8 @@ export const MUNICIPAL_IMAGES = {
   main: `${import.meta.env.BASE_URL}images/images municipal/municipal-main.png`,
   historical: `${import.meta.env.BASE_URL}images/images municipal/municipal-historical.png`,
   detailed: `${import.meta.env.BASE_URL}images/images municipal/municipal-detailed.png`,
+  model: `${import.meta.env.BASE_URL}images/images municipal/municipal-data-model.png`,
+  ssis: `${import.meta.env.BASE_URL}images/images municipal/municipal-ssis.png`,
 };
 
 // Component to render real Power BI captures with a styled technical placeholder fallback
@@ -42,7 +44,9 @@ function CaptureFrame({
   sublabel,
   pathHint,
   aspectRatio = "16/9",
-  onExpand = null
+  onExpand = null,
+  placeholderBadge = "POWER BI REPORT VIEW",
+  iconType = "pbi"
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -73,10 +77,10 @@ function CaptureFrame({
 
       {(!isLoaded || hasError) && (
         <div className="mr-capture-placeholder">
-          <div className="mr-placeholder-icon mr-placeholder-icon--pbi">
-            <PowerBiLogo size={32} />
+          <div className={`mr-placeholder-icon mr-placeholder-icon--${iconType}`}>
+            {iconType === "ssis" ? <Layers size={32} /> : <PowerBiLogo size={32} />}
           </div>
-          <span className="mr-placeholder-badge mr-placeholder-badge--pbi">POWER BI REPORT VIEW</span>
+          <span className={`mr-placeholder-badge mr-placeholder-badge--${iconType}`}>{placeholderBadge}</span>
           <h4 className="mr-placeholder-title">{label}</h4>
           <p className="mr-placeholder-sub">{sublabel}</p>
           <div className="mr-placeholder-path">
@@ -161,12 +165,12 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
           <span>BACK TO PORTFOLIO</span>
         </button>
         <div className="cs-nav-center">
-          <span className="cs-nav-project">MUNICIPAL REVENUE DASHBOARD</span>
+          <span className="cs-nav-project">MUNICIPAL REVENUE ANALYTICS</span>
           <span className="cs-nav-tag">DATA ANALYTICS / BI</span>
         </div>
         <div className="mr-nav-status">
           <PowerBiLogo size={14} />
-          <span>POWER BI &amp; SQL SERVER</span>
+          <span>POWER BI, SSIS &amp; SQL SERVER</span>
         </div>
       </nav>
 
@@ -181,15 +185,16 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
             </div>
             <h1 className="cs-title">
               Municipal Revenue<br />
-              <span>Dashboard</span>
+              <span>Analytics</span>
             </h1>
             <p className="cs-subtitle">Data Analytics &amp; Business Intelligence</p>
             <p className="cs-tagline">
-              Interactive analysis and visualization of municipal revenue data to monitor fiscal evolution, evaluate comparative periods, and facilitate the interpretation of key management indicators.
+              Centralized Business Intelligence solution transforming operational municipal data into reusable analytical models and decision-ready Power BI executive dashboards.
             </p>
             <div className="cs-tags">
               <span className="tag-pbi">Power BI</span>
               <span>SQL Server</span>
+              <span className="tag-ssis">SSIS</span>
               <span>Power Query / ETL</span>
               <span>DAX</span>
               <span>Data Modeling</span>
@@ -235,11 +240,11 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
 
             <div className="mr-process-sep">→</div>
 
-            <div className="mr-process-node">
+            <div className="mr-process-node mr-process-node--ssis">
               <div className="mr-node-badge">02</div>
               <div className="mr-node-icon"><Layers size={18} /></div>
-              <h4>Power Query / ETL</h4>
-              <p>Cleaning, transformation and standardization of municipal tax data.</p>
+              <h4>SSIS / ETL</h4>
+              <p>Data integration and transformation layer used to prepare municipal data for analytical reporting.</p>
             </div>
 
             <div className="mr-process-sep">→</div>
@@ -280,9 +285,166 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
           </div>
         </section>
 
-        {/* ── 3. HISTORICAL REVENUE ANALYSIS ── */}
+        {/* ── 3. SSIS / ETL WORKFLOW ── */}
         <section className="cs-section">
-          <SectionLabel index="03">HISTORICAL REVENUE ANALYSIS</SectionLabel>
+          <SectionLabel index="03">SSIS / ETL</SectionLabel>
+          <div className="cs-section-header">
+            <h2>SSIS / ETL:<br /><span>Data Integration &amp; Transformation Workflow.</span></h2>
+            <p className="cs-section-sub">
+              Data integration and transformation workflow.
+            </p>
+            <p>
+              SSIS is used as part of the ETL layer to integrate and prepare municipal data for analytical reporting.
+            </p>
+          </div>
+
+          <div className="mr-showcase-block">
+            <CaptureFrame
+              src={MUNICIPAL_IMAGES.ssis}
+              label="SSIS / ETL WORKFLOW"
+              sublabel="Control Flow / Data Flow"
+              pathHint="public/images/images municipal/municipal-ssis.png"
+              aspectRatio="16/9"
+              placeholderBadge="SSIS / ETL WORKFLOW"
+              iconType="ssis"
+              onExpand={() => setLightboxImg({
+                src: MUNICIPAL_IMAGES.ssis,
+                title: "SSIS / ETL Package — Control Flow / Data Flow"
+              })}
+            />
+            <p className="mr-showcase-caption">
+              Visual evidence of SQL Server Integration Services (SSIS) packages used for data extraction and transformation.
+            </p>
+          </div>
+        </section>
+
+        {/* ── 4. DATA MODEL ── */}
+        <section className="cs-section">
+          <SectionLabel index="04">DATA MODEL</SectionLabel>
+          <div className="cs-section-header">
+            <h2>Data Model:<br /><span>Reusable Dimensional Architecture.</span></h2>
+            <p className="cs-section-sub">
+              Reusable dimensional model powering multiple municipal analytics dashboards.
+            </p>
+            <p>
+              This dimensional model serves as the analytical foundation for multiple municipal reporting solutions. A shared semantic model allows different reports to use consistent dimensions, DAX measures and business logic instead of building independent datasets for each dashboard.
+            </p>
+          </div>
+
+          <div className="mr-model-grid">
+            {/* LARGE MODEL CAPTURE */}
+            <div className="mr-showcase-block mr-model-showcase">
+              <CaptureFrame
+                src={MUNICIPAL_IMAGES.model}
+                label="Municipal Revenue — Dimensional Data Model"
+                sublabel="Star / Constellation Schema designed for municipal fiscal data analytics."
+                pathHint="public/images/images municipal/municipal-data-model.png"
+                aspectRatio="16/9"
+                onExpand={() => setLightboxImg({
+                  src: MUNICIPAL_IMAGES.model,
+                  title: "Municipal Revenue — Dimensional Data Model (Star / Constellation Schema)"
+                })}
+              />
+              <p className="mr-showcase-caption">
+                Dimensional model architecture connecting fiscal transaction data with shared municipal reference dimensions.
+              </p>
+            </div>
+
+            {/* TECHNICAL SPECS CARD */}
+            <div className="mr-model-tech-card">
+              <div className="mr-tech-card-section">
+                <span className="mr-tech-card-label">ARCHITECTURE</span>
+                <div className="mr-arch-flow">
+                  <span>SQL Server</span>
+                  <span className="mr-arch-arr">→</span>
+                  <span>SSIS / ETL</span>
+                  <span className="mr-arch-arr">→</span>
+                  <span>Data Model</span>
+                  <span className="mr-arch-arr">→</span>
+                  <span>DAX</span>
+                  <span className="mr-arch-arr">→</span>
+                  <span>Power BI</span>
+                  <span className="mr-arch-arr">→</span>
+                  <span>Analysis</span>
+                </div>
+                <small className="mr-tech-note">
+                  *Power Query is also utilized for in-report data transformation and preparation within the Power BI environment.
+                </small>
+              </div>
+
+              <div className="mr-tech-card-divider" />
+
+              <div className="mr-tech-card-section">
+                <span className="mr-tech-card-label">MODEL DESIGN</span>
+                <ul className="mr-tech-bullet-list">
+                  <li>Shared dimensions</li>
+                  <li>Fact-based analytical model</li>
+                  <li>Reusable relationships</li>
+                  <li>Consistent business logic</li>
+                  <li>Multiple Power BI reports using the same model</li>
+                </ul>
+              </div>
+
+              <div className="mr-tech-card-divider" />
+
+              <div className="mr-tech-card-section">
+                <span className="mr-tech-card-label">PURPOSE</span>
+                <ul className="mr-tech-bullet-list">
+                  <li>Centralize analytical logic</li>
+                  <li>Reuse the same semantic model across reports</li>
+                  <li>Maintain consistent KPIs and calculations</li>
+                  <li>Support different municipal reporting needs</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* SHARED DATA MODEL CONSUMERS FLOW */}
+          <div className="mr-shared-model-block">
+            <div className="mr-shared-model-header">
+              <span className="mr-shared-badge">SEMANTIC MODEL ARCHITECTURE</span>
+              <h3>Shared Data Model &amp; BI Ecosystem</h3>
+              <p>One centralized semantic data model powers multiple operational and executive reporting solutions.</p>
+            </div>
+
+            <div className="mr-shared-diagram">
+              <div className="mr-shared-source-node">
+                <Database size={16} />
+                <strong>SHARED DATA MODEL</strong>
+              </div>
+
+              <div className="mr-shared-arrows">
+                <svg viewBox="0 0 300 24" fill="none" className="mr-shared-arrows-svg">
+                  <path d="M150 0 V12 M150 12 H30 V24 M150 12 H110 V24 M150 12 H190 V24 M150 12 H270 V24" stroke="var(--line-bright)" strokeWidth="1.2" strokeDasharray="3 2" />
+                </svg>
+              </div>
+
+              <div className="mr-shared-targets">
+                <div className="mr-shared-target mr-shared-target--active">
+                  <span className="mr-target-dot" />
+                  <strong>Revenue Analytics</strong>
+                  <small>Active Executive Report</small>
+                </div>
+                <div className="mr-shared-target">
+                  <strong>Tax Debt Analysis</strong>
+                  <small>Fiscal Management</small>
+                </div>
+                <div className="mr-shared-target">
+                  <strong>Management Reporting</strong>
+                  <small>Executive Summaries</small>
+                </div>
+                <div className="mr-shared-target">
+                  <strong>Other BI Reports</strong>
+                  <small>Municipal Operational Views</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 5. HISTORICAL REVENUE ANALYSIS ── */}
+        <section className="cs-section">
+          <SectionLabel index="05">HISTORICAL REVENUE ANALYSIS</SectionLabel>
           <div className="cs-section-header">
             <h2>Historical Revenue Analysis:<br /><span>Multi-Period Performance Tracking.</span></h2>
             <p>
@@ -308,9 +470,9 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
           </div>
         </section>
 
-        {/* ── 4. DETAILED / COMPARATIVE ANALYSIS ── */}
+        {/* ── 6. DETAILED REVENUE ANALYSIS ── */}
         <section className="cs-section">
-          <SectionLabel index="04">DETAILED REVENUE ANALYSIS</SectionLabel>
+          <SectionLabel index="06">DETAILED REVENUE ANALYSIS</SectionLabel>
           <div className="cs-section-header">
             <h2>Detailed Revenue Analysis:<br /><span>Granular Breakdown &amp; Comparison.</span></h2>
             <p>
@@ -336,9 +498,9 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
           </div>
         </section>
 
-        {/* ── 5. DAX & ANALYTICAL MEASURES ── */}
+        {/* ── 7. DAX & ANALYTICAL MEASURES ── */}
         <section className="cs-section">
-          <SectionLabel index="05">DAX &amp; ANALYTICAL MEASURES</SectionLabel>
+          <SectionLabel index="07">DAX &amp; ANALYTICAL MEASURES</SectionLabel>
           <div className="cs-section-header">
             <h2>DAX &amp; Analytical Measures:<br /><span>Underlying Business Logic.</span></h2>
             <p>
@@ -379,9 +541,9 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
           </div>
         </section>
 
-        {/* ── DATA GOVERNANCE & PRIVACY COMPLIANCE ── */}
+        {/* ── 8. DATA PRIVACY & COMPLIANCE ── */}
         <section className="cs-section">
-          <SectionLabel index="06">DATA PRIVACY &amp; COMPLIANCE</SectionLabel>
+          <SectionLabel index="08">DATA PRIVACY &amp; COMPLIANCE</SectionLabel>
           <div className="mr-privacy-card">
             <div className="mr-privacy-header">
               <ShieldCheck size={26} className="mr-shield-icon" />
