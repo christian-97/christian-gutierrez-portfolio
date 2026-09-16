@@ -2715,7 +2715,121 @@
   }
 }
 
+/* =========================================================
+   PROJECT #03: REVENUE FORECASTING 2027 CARD & PIPELINE
+   ========================================================= */
+.project-tech-ref--python span {
+  color: #38bdf8;
+  font-weight: 500;
+}
 
+.tags .tag-python {
+  border-color: rgba(56, 126, 184, 0.45) !important;
+  color: #63b3ed !important;
+  background: rgba(56, 126, 184, 0.1) !important;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(56, 126, 184, 0.1);
+}
 
+.tags .tag-ds {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.08) !important;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.08);
+}
 
+.case-link--upcoming {
+  color: var(--muted) !important;
+  border-bottom: 1px dashed rgba(167, 177, 184, 0.4) !important;
+  cursor: default;
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+  user-select: none;
+}
 
+.case-link--upcoming:hover {
+  color: var(--text) !important;
+  border-bottom-color: rgba(56, 189, 248, 0.6) !important;
+}
+
+.case-link--upcoming .live-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.85);
+}
+
+.forecasting-pipeline-visual {
+  height: 280px;
+  background: radial-gradient(ellipse at 50% 65%, rgba(56, 189, 248, 0.06), transparent 70%), var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 18px 10px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pipe-header-dot--py {
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.85);
+}
+
+.pipe-node--stats {
+  border-color: rgba(99, 179, 237, 0.28);
+}
+
+.pipe-phase--stats {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  font-weight: 600;
+}
+
+.pipe-node--py {
+  border-color: rgba(56, 189, 248, 0.45);
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.12) 0%, rgba(17, 24, 32, 0.92) 100%);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.12);
+}
+
+.pipe-node--py .pipe-node-left strong {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.pipe-phase--py {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  font-weight: 600;
+}
+
+.pipe-node--forecast {
+  border-color: rgba(0, 212, 170, 0.45);
+  background: linear-gradient(90deg, rgba(0, 212, 170, 0.12) 0%, rgba(17, 24, 32, 0.92) 100%);
+  box-shadow: 0 0 14px rgba(0, 212, 170, 0.12);
+}
+
+.pipe-node--forecast .pipe-node-left strong {
+  color: var(--mint);
+  font-weight: 700;
+}
+
+.pipe-phase--forecast {
+  color: var(--mint);
+  background: rgba(0, 212, 170, 0.14);
+  border: 1px solid rgba(0, 212, 170, 0.32);
+  font-weight: 600;
+}
+
+.pipe-connector--to-py {
+  color: rgba(56, 189, 248, 0.55);
+}
+
+@media (max-width: 650px) {
+  .forecasting-pipeline-visual {
+    height: 240px;
+    padding: 10px 12px 8px;
+  }
+}

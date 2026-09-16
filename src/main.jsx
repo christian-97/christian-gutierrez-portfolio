@@ -5,6 +5,7 @@ import "./styles.css";
 import { FactuOnlineCaseStudy } from "./FactuOnlineCaseStudy.jsx";
 import MunicipalRevenueCaseStudy from "./MunicipalRevenueCaseStudy.jsx";
 import PowerBiLogo from "./PowerBiLogo.jsx";
+import PythonLogo from "./PythonLogo.jsx";
 
 const toolkit = [
   {
@@ -71,7 +72,8 @@ const pipeline = [
 
 const projects = [
   { number: "01", title: "FactuOnLine", type: "SOFTWARE / SAAS", description: "Multi-tenant SaaS platform for electronic invoicing and commercial management, developed with scalable multi-tenant architecture.", tags: ["React", "NestJS", "TypeScript", "PostgreSQL", "REST APIs"], chart: "system" },
-  { number: "02", title: "Municipal Revenue Analytics", type: "DATA ANALYTICS / BUSINESS INTELLIGENCE", description: "Comprehensive Business Intelligence solution connecting municipal SQL Server data, SSIS ETL pipelines, shared dimensional modeling, and interactive Power BI executive dashboards.", tags: ["Power BI", "SQL Server", "SSIS", "Power Query", "ETL", "Data Modeling", "DAX"], chart: "municipal" }
+  { number: "02", title: "Municipal Revenue Analytics", type: "DATA ANALYTICS / BUSINESS INTELLIGENCE", description: "Comprehensive Business Intelligence solution connecting municipal SQL Server data, SSIS ETL pipelines, shared dimensional modeling, and interactive Power BI executive dashboards.", tags: ["Power BI", "SQL Server", "SSIS", "Power Query", "ETL", "Data Modeling", "DAX"], chart: "municipal" },
+  { number: "03", title: "Revenue Forecasting 2027", type: "DATA SCIENCE / PREDICTIVE ANALYTICS", description: "Predicting municipal revenue for 2027 using historical data, statistical analysis and Python-based forecasting.", tags: ["Python", "Pandas", "NumPy", "Statistics", "Machine Learning", "Predictive Analytics"], chart: "forecasting" }
 ];
 
 function useReveal(deps) {
@@ -633,6 +635,98 @@ function ProjectChart({ type }) {
       </div>
     );
   }
+  if (type === "forecasting") {
+    return (
+      <div className="forecasting-pipeline-visual">
+        <div className="pipe-header">
+          <div className="pipe-header-title">
+            <span className="pipe-header-dot pipe-header-dot--py" />
+            <span>PREDICTIVE MODELING PIPELINE</span>
+          </div>
+          <span className="pipe-header-tag">DATA SCIENCE / 2027</span>
+        </div>
+
+        <div className="pipe-nodes-wrapper">
+          {/* STAGE 1: HISTORICAL REVENUE */}
+          <div className="pipe-node pipe-node--source">
+            <div className="pipe-node-left">
+              <span className="pipe-node-icon"><Database size={13} /></span>
+              <strong>Historical Revenue</strong>
+            </div>
+            <span className="pipe-node-phase">TIME SERIES</span>
+          </div>
+
+          {/* CONNECTOR 1 */}
+          <div className="pipe-connector">
+            <svg viewBox="0 0 16 7" fill="none" className="pipe-connector-svg">
+              <line x1="8" y1="0" x2="8" y2="4" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <polygon points="5.5,3.5 8,6.5 10.5,3.5" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* STAGE 2: PANDAS & NUMPY */}
+          <div className="pipe-node pipe-node--stats">
+            <div className="pipe-node-left">
+              <span className="pipe-node-icon"><Table size={13} /></span>
+              <strong>Pandas &amp; NumPy</strong>
+            </div>
+            <span className="pipe-node-phase pipe-phase--stats">EDA &amp; STATS</span>
+          </div>
+
+          {/* CONNECTOR 2 */}
+          <div className="pipe-connector">
+            <svg viewBox="0 0 16 7" fill="none" className="pipe-connector-svg">
+              <line x1="8" y1="0" x2="8" y2="4" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <polygon points="5.5,3.5 8,6.5 10.5,3.5" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* STAGE 3: FEATURE ENGINEERING */}
+          <div className="pipe-node pipe-node--features">
+            <div className="pipe-node-left">
+              <span className="pipe-node-icon"><Layers size={13} /></span>
+              <strong>Feature Engineering</strong>
+            </div>
+            <span className="pipe-node-phase">SEASONALITY</span>
+          </div>
+
+          {/* CONNECTOR 3 */}
+          <div className="pipe-connector pipe-connector--to-py">
+            <svg viewBox="0 0 16 7" fill="none" className="pipe-connector-svg">
+              <line x1="8" y1="0" x2="8" y2="4" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <polygon points="5.5,3.5 8,6.5 10.5,3.5" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* STAGE 4: MACHINE LEARNING */}
+          <div className="pipe-node pipe-node--py">
+            <div className="pipe-node-left">
+              <span className="pipe-node-icon"><PythonLogo size={14} /></span>
+              <strong>Machine Learning</strong>
+            </div>
+            <span className="pipe-node-phase pipe-phase--py">MODELING</span>
+          </div>
+
+          {/* CONNECTOR 4 */}
+          <div className="pipe-connector pipe-connector--to-py">
+            <svg viewBox="0 0 16 7" fill="none" className="pipe-connector-svg">
+              <line x1="8" y1="0" x2="8" y2="4" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <polygon points="5.5,3.5 8,6.5 10.5,3.5" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* STAGE 5: 2027 FORECAST */}
+          <div className="pipe-node pipe-node--forecast">
+            <div className="pipe-node-left">
+              <span className="pipe-node-icon"><MoveUpRight size={13} /></span>
+              <strong>2027 Forecast</strong>
+            </div>
+            <span className="pipe-node-phase pipe-phase--forecast">PROJECTION</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   const bars = type === "inventory" ? [42, 72, 56, 84, 63, 91, 70] : [34, 50, 44, 68, 53, 79, 88];
   return <div className="project-chart"><div className="chart-kpi"><span>{type === "inventory" ? "STOCK FLOW" : "REVENUE TREND"}</span><strong>{type === "inventory" ? "ANALYSIS" : "TRACKING"}</strong></div><div className="chart-grid"><svg viewBox="0 0 300 100" preserveAspectRatio="none"><polyline points={bars.map((value, index) => `${index * 50},${100 - value}`).join(" ")} /></svg>{bars.map((value, index) => <i key={index} style={{height: `${value}%`}}/> )}</div><div className="chart-axis"><span>JAN</span><span>MAR</span><span>JUN</span><span>SEP</span><span>DEC</span></div></div>;
 }
@@ -717,7 +811,7 @@ function App() {
     <section id="toolkit" className="section toolkit"><SectionLabel index="02">MY DATA TOOLKIT</SectionLabel><div className="section-intro reveal"><h2>Tools to focus on<br/><span>what truly matters.</span></h2><p>SQL Server, Power BI, DAX, Power Query, Advanced Excel, Python, ETL, and SSIS for data; React, NestJS, TypeScript, PostgreSQL, REST APIs, and Git / GitHub for digital solutions.</p></div><div className="tool-grid reveal">{toolkit.map((item) => <ToolkitCard key={item.name} item={item}/>)}</div></section>
     {/* <section id="lab" className="section lab-section"><SectionLabel index="03">DATA LAB</SectionLabel><div className="section-intro reveal"><h2>A compact<br/><span>analysis workspace.</span></h2><p>A visual exploration of how I evaluate a dataset before turning it into a decision. Demo with mock data.</p></div><div className="reveal"><DataLab/></div></section> */}
     <section className="section pipeline-section"><SectionLabel index="03">DATA PIPELINE</SectionLabel><div className="section-intro reveal"><h2>From raw file to<br/><span>insight.</span></h2><p>Visualization quality begins long before rendering the chart.</p></div><div className="pipeline reveal">{pipeline.map(([name, description], index) => <button className={`pipeline-step ${pipelineActive === index ? "selected" : ""}`} key={name} onMouseEnter={() => setPipelineActive(index)} onFocus={() => setPipelineActive(index)}><span className="pipeline-number">0{index + 1}</span><strong>{name}</strong>{index < pipeline.length - 1 && <i className="pipeline-connector"/>}<div className="pipeline-tooltip">{description}</div></button>)}</div></section>
-    <section id="projects" className="section projects"><SectionLabel index="04">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Cases where data<br/><span>drives real action.</span></h2><p>Projects built from operational reality: connecting information, systems, and strategic decisions.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div>{project.title === "FactuOnLine" && (<div className="project-company-ref"><img src={`${import.meta.env.BASE_URL}images/images factuonline/logo.png`} alt="I-On Line Software Perú" className="project-company-logo" /><span>I-On Line Software Perú</span></div>)}{project.title === "Municipal Revenue Analytics" && (<div className="project-company-ref project-tech-ref"><PowerBiLogo size={18} className="project-company-logo" /><span>Microsoft Power BI · Data Analytics</span></div>)}<h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag} className={tag === "Power BI" ? "tag-pbi" : tag === "SSIS" ? "tag-ssis" : ""}>{tag}</span>)}</div>{project.title === "FactuOnLine" ? (<a href="#factuonline" onClick={(e) => { e.preventDefault(); navigateToCaseStudy(); }} className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>) : (<a href="#municipal-revenue" onClick={(e) => { e.preventDefault(); navigateToMunicipalCaseStudy(); }} className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>)}</div><ProjectChart type={project.chart}/></div></article>)}</div></section>
+    <section id="projects" className="section projects"><SectionLabel index="04">SELECTED PROJECTS</SectionLabel><div className="section-intro reveal"><h2>Cases where data<br/><span>drives real action.</span></h2><p>Projects built from operational reality: connecting information, systems, and strategic decisions.</p></div><div className="project-list">{projects.map((project) => <article className="project-case reveal" key={project.title}><div className="project-meta"><span>{project.number}</span><span>{project.type}</span></div><div className="project-content"><div>{project.title === "FactuOnLine" && (<div className="project-company-ref"><img src={`${import.meta.env.BASE_URL}images/images factuonline/logo.png`} alt="I-On Line Software Perú" className="project-company-logo" /><span>I-On Line Software Perú</span></div>)}{project.title === "Municipal Revenue Analytics" && (<div className="project-company-ref project-tech-ref"><PowerBiLogo size={18} className="project-company-logo" /><span>Microsoft Power BI · Data Analytics</span></div>)}{project.title === "Revenue Forecasting 2027" && (<div className="project-company-ref project-tech-ref project-tech-ref--python"><PythonLogo size={18} className="project-company-logo" /><span>Python · Predictive Analytics &amp; Machine Learning</span></div>)}<h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag} className={tag === "Power BI" ? "tag-pbi" : tag === "SSIS" ? "tag-ssis" : tag === "Python" ? "tag-python" : tag === "Machine Learning" || tag === "Predictive Analytics" ? "tag-ds" : ""}>{tag}</span>)}</div>{project.title === "FactuOnLine" ? (<a href="#factuonline" onClick={(e) => { e.preventDefault(); navigateToCaseStudy(); }} className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>) : project.title === "Municipal Revenue Analytics" ? (<a href="#municipal-revenue" onClick={(e) => { e.preventDefault(); navigateToMunicipalCaseStudy(); }} className="case-link">VIEW CASE <ArrowUpRight size={16}/></a>) : (<span className="case-link case-link--upcoming">IN DEVELOPMENT · PYTHON <i className="live-dot" /></span>)}</div><ProjectChart type={project.chart}/></div></article>)}</div></section>
     <section className="section future"><SectionLabel index="05">THE NEXT DATASET</SectionLabel><div className="future-layout reveal"><div><h2>Data Analytics is where I work today.<br/><em>Data Science is where I'm heading.</em></h2><p>I am building the next stage with discipline: deepening my knowledge in Python, statistics, automation, and advanced analysis while staying closely connected to business needs.</p></div><div className="roadmap"><div className="roadmap-col done"><span>NOW</span><h3>DATA ANALYTICS</h3>{["SQL Server", "Power BI", "Python", "Excel", "DAX", "Power Query", "SSIS", "Data Cleaning", "Data Modeling", "ETL", "Data Visualization", "Reporting"].map((item) => <p key={item}><Check size={14}/>{item}</p>)}</div><div className="roadmap-arrow">→</div><div className="roadmap-col next"><span>NEXT</span><h3>DATA SCIENCE</h3>{["Python", "Statistics", "Probability", "NumPy", "Pandas", "Exploratory Data Analysis", "Data Visualization", "Statistical Modeling", "Feature Engineering", "Machine Learning", "Predictive Analytics", "Advanced Analysis"].map((item) => <p key={item}><MoveUpRight size={14}/>{item}</p>)}</div></div></div></section>
     <section id="experience" className="section experience"><SectionLabel index="06">EXPERIENCE</SectionLabel><div className="experience-head reveal"><h2>Experience that<br/><span>builds deep context.</span></h2><p>From warehouse operations and inventory to municipal tax data analytics and digital software solutions. Every stage shaped a sharper way to interpret data.</p></div><div className="timeline reveal"><article><span>2021 — 2024</span><i/><div><h3>Corporación Mendoza</h3><p>Warehouse Operations Analyst</p><small>Inventory · historical analysis · process optimization</small></div></article><article><span>2024</span><i/><div><h3>Kasumi S.A.C.</h3><p>Inventory Auditor & Operations Administrator</p><small>Data auditing · discrepancy analysis · workflow digitization</small></div></article><article className="timeline-current"><span>2025 — PRESENT</span><i/><div><h3>Municipalidad de Lurigancho-Chosica</h3><p>Data Analyst / Statistical Database Analyst</p><small>SQL Server · Power BI · DAX · Excel · ETL · SSIS · Power Query · Python</small></div></article><article><span>SOFTWARE / SAAS</span><i/><div><h3>FactuOnLine</h3><p>Software / SaaS Developer</p><small>React · NestJS · TypeScript · PostgreSQL · SaaS · REST APIs</small></div></article></div></section>
     <section id="cv" className="section cv-section"><SectionLabel index="07">CURRICULUM VITAE</SectionLabel><div className="cv-layout reveal"><div><h2>The complete<br/><span>document.</span></h2><p>Experience, education, and technical toolkit in a single overview.</p><a className="primary" href={`${import.meta.env.BASE_URL}cv/christian-gutierrez-cv.pdf`} target="_blank" rel="noreferrer">DOWNLOAD CV <ArrowDown size={16}/></a></div><iframe className="cv-embed" src={`${import.meta.env.BASE_URL}cv/christian-gutierrez-cv.pdf#view=FitH&toolbar=0&navpanes=0&scrollbar=0`} title="Preview of Christian Gutierrez's CV" scrolling="no"><a href={`${import.meta.env.BASE_URL}cv/christian-gutierrez-cv.pdf`}>Open CV</a></iframe></div></section>
