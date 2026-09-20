@@ -31,8 +31,7 @@ function SectionLabel({ index, children }) {
 // Physical directory: public/images/images municipal/
 export const MUNICIPAL_IMAGES = {
   main: `${import.meta.env.BASE_URL}images/images municipal/municipal-main.png`,
-  historical: `${import.meta.env.BASE_URL}images/images municipal/municipal-historical.png`,
-  detailed: `${import.meta.env.BASE_URL}images/images municipal/municipal-detailed.png`,
+  revenue2026: `${import.meta.env.BASE_URL}images/images municipal/municipal-2026.png`,
   model: `${import.meta.env.BASE_URL}images/images municipal/municipal-data-model.png`,
   ssis: `${import.meta.env.BASE_URL}images/images municipal/municipal-ssis.png`,
 };
@@ -109,56 +108,65 @@ const DAX_MEASURES = [
   {
     id: "total-revenue",
     name: "Total Revenue",
+    category: "BASE AGGREGATION",
+    concept: "SUM",
+    visualRef: "KPI Card 'Recaudación total' y gráfico de barras plurianual",
     code: `Total Revenue = 
 SUM( FACT_DETCAJA[Importe] )`,
-    explanation: "Calculates the total monetary amount effectively collected in cash transactions within the active temporal and category filter context."
-  },
-  {
-    id: "revenue-ytd",
-    name: "Revenue YTD",
-    code: `Revenue YTD = 
-TOTALYTD(
-    [Total Revenue],
-    Dim_Calendario[Date]
-)`,
-    explanation: "Accumulates collected revenue from the first day of the fiscal year up to the selected cutoff date (Year-to-Date)."
+    explanation: "Cálculo base de agregación monetaria. Suma el importe efectivo en caja evaluando dinámicamente el contexto de filtro temporal, distrito o rubro activo."
   },
   {
     id: "revenue-sply",
     name: "Revenue SPLY",
+    category: "TIME INTELLIGENCE",
+    concept: "CALCULATE · SAMEPERIODLASTYEAR",
+    visualRef: "Métricas comparativas vs período anterior y tabla de evolución",
     code: `Revenue SPLY = 
 CALCULATE(
     [Total Revenue],
-    SAMEPERIODLASTYEAR( Dim_Calendario[Date] )
+    SAMEPERIODLASTYEAR( DIM_FECHA[dtFecCaja] )
 )`,
-    explanation: "Returns revenue from the equivalent period of the previous fiscal year (Same Period Last Year) to enable clean period-over-period comparisons."
+    explanation: "Desplaza el contexto de evaluación exactamente un año atrás sobre la dimensión calendario DIM_FECHA, garantizando comparativas homogéneas a igual corte de mes."
   },
   {
     id: "yoy-variance",
     name: "YoY Variance %",
+    category: "SAFE RATIO",
+    concept: "VAR · DIVIDE",
+    visualRef: "Indicadores de variación '↗ 73.85%' y '↘ -2.50% vs 2025'",
     code: `YoY Variance % = 
 VAR _Current = [Total Revenue]
-VAR _Prior = [Revenue SPLY]
+VAR _Prior   = [Revenue SPLY]
 RETURN
     DIVIDE( _Current - _Prior, _Prior, 0 )`,
-    explanation: "Computes year-over-year percentage growth or contraction, using DIVIDE to handle division by zero safely without errors."
+    explanation: "Evalúa el porcentaje de crecimiento o contracción interanual. Utiliza variables locales para evitar recalcular medidas y DIVIDE para manejar con seguridad divisiones entre cero."
   },
   {
-    id: "budget-target",
-    name: "Budget Target Completion %",
-    code: `Budget Target Completion % = 
-DIVIDE(
-    [Total Revenue],
-    [Meta Presupuestal],
-    0
-)`,
-    explanation: "Evaluates the collection rate achieved relative to the projected institutional budget target for the corresponding fiscal period."
+    id: "revenue-share",
+    name: "% Participación",
+    category: "CONTEXT OVERRIDE",
+    concept: "CALCULATE · ALLSELECTED",
+    visualRef: "Gráfico de dona 'Participación por Periodo' (100% acumulado)",
+    code: `% Participación = 
+VAR _RecaudacionFila  = [Total Revenue]
+VAR _RecaudacionTotal = 
+    CALCULATE(
+        [Total Revenue],
+        ALLSELECTED( FACT_DETCAJA )
+    )
+RETURN
+    DIVIDE( _RecaudacionFila, _RecaudacionTotal, 0 )`,
+    explanation: "Calcula el peso relativo de cada período o categoría sobre el total visible, usando ALLSELECTED para ignorar los filtros de fila del visual sin perder los segmentadores de la página."
   }
 ];
 
 export default function MunicipalRevenueCaseStudy({ onBack }) {
   const [lightboxImg, setLightboxImg] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [activeDaxId, setActiveDaxId] = useState("total-revenue");
+
+  const activeDaxMeasure =
+    DAX_MEASURES.find((m) => m.id === activeDaxId) || DAX_MEASURES[0];
 
   useEffect(() => {
     if (!lightboxImg) return;
@@ -202,10 +210,10 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
       </nav>
 
       <div className="cs-main">
-        {/* ── 1. HERO / INTRODUCTION ── */}
+        {/* ── 01 — OVERVIEW ── */}
         <header className="cs-section cs-hero">
           <div className="cs-hero-header">
-            <SectionLabel index="01">CASE STUDY</SectionLabel>
+            <SectionLabel index="01">OVERVIEW</SectionLabel>
             <div className="mr-hero-pbi-badge">
               <PowerBiLogo size={14} />
               <span>MICROSOFT POWER BI · DATA ANALYTICS SOLUTION</span>
@@ -216,7 +224,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
             </h1>
             <p className="cs-subtitle">Data Analytics &amp; Business Intelligence</p>
             <p className="cs-tagline">
-              Centralized Business Intelligence solution transforming operational municipal data into reusable analytical models and decision-ready Power BI executive dashboards.
+              Personal Business Intelligence project by Christian Gutierrez. Integrates historical municipal revenue data (2007–2026) using SQL Server and SSIS into a dimensional model powering focused executive Power BI dashboards.
             </p>
             <div className="cs-tags">
               <span className="tag-pbi">Power BI</span>
@@ -228,23 +236,28 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
             </div>
           </div>
 
-          {/* MAIN CAPTURE */}
-          <div className="mr-showcase-block">
-            <CaptureFrame
-              src={MUNICIPAL_IMAGES.main}
-              label="Municipal Revenue Dashboard — Executive Overview"
-              sublabel="Executive panel developed in Power BI for consolidated municipal revenue monitoring."
-              pathHint="public/images/images municipal/municipal-main.png"
-              aspectRatio="16/9"
-              onExpand={() => setLightboxImg({
-                src: MUNICIPAL_IMAGES.main,
-                title: "Municipal Revenue Dashboard — Executive Overview",
-                desc: "Executive dashboard developed in Power BI to monitor municipal revenue collection and its evolution across selected periods."
-              })}
-            />
-            <p className="mr-showcase-caption">
-              Executive dashboard developed in Power BI to monitor municipal revenue collection and its evolution across selected periods.
-            </p>
+          {/* PROJECT SPECS GRID */}
+          <div className="mr-specs-grid">
+            <div className="mr-spec-card">
+              <span className="mr-spec-label">PROJECT TYPE</span>
+              <strong className="mr-spec-val">Personal BI Project</strong>
+              <span className="mr-spec-sub">Public sector fiscal data analytics</span>
+            </div>
+            <div className="mr-spec-card">
+              <span className="mr-spec-label">DATA STACK</span>
+              <strong className="mr-spec-val">SQL Server · SSIS · Power BI</strong>
+              <span className="mr-spec-sub">End-to-end integration &amp; modeling</span>
+            </div>
+            <div className="mr-spec-card">
+              <span className="mr-spec-label">HISTORICAL HORIZON</span>
+              <strong className="mr-spec-val">2007 – 2026</strong>
+              <span className="mr-spec-sub">20 years of municipal revenue records</span>
+            </div>
+            <div className="mr-spec-card">
+              <span className="mr-spec-label">ANALYTICAL OUTPUT</span>
+              <strong className="mr-spec-val">2 Focused Dashboards</strong>
+              <span className="mr-spec-sub">Executive / Historical &amp; 2026 Analysis</span>
+            </div>
           </div>
         </header>
 
@@ -445,131 +458,177 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
 
               <div className="mr-shared-arrows">
                 <svg viewBox="0 0 300 24" fill="none" className="mr-shared-arrows-svg">
-                  <path d="M150 0 V12 M150 12 H30 V24 M150 12 H110 V24 M150 12 H190 V24 M150 12 H270 V24" stroke="var(--line-bright)" strokeWidth="1.2" strokeDasharray="3 2" />
+                  <path d="M150 0 V12 M150 12 H75 V24 M150 12 H225 V24" stroke="var(--line-bright)" strokeWidth="1.2" strokeDasharray="3 2" />
                 </svg>
               </div>
 
-              <div className="mr-shared-targets">
+              <div className="mr-shared-targets" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
                 <div className="mr-shared-target mr-shared-target--active">
                   <span className="mr-target-dot" />
-                  <strong>Revenue Analytics</strong>
+                  <strong>Executive / Historical Analysis</strong>
                   <small>Active Executive Report</small>
                 </div>
                 <div className="mr-shared-target">
-                  <strong>Tax Debt Analysis</strong>
-                  <small>Fiscal Management</small>
-                </div>
-                <div className="mr-shared-target">
-                  <strong>Management Reporting</strong>
-                  <small>Executive Summaries</small>
-                </div>
-                <div className="mr-shared-target">
-                  <strong>Other BI Reports</strong>
-                  <small>Municipal Operational Views</small>
+                  <span className="mr-target-dot" style={{ background: "var(--blue)" }} />
+                  <strong>2026 Revenue Analysis</strong>
+                  <small>Fiscal Period In-Depth (In Development)</small>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── 5. HISTORICAL REVENUE ANALYSIS ── */}
+        {/* ── 05 — EXECUTIVE / HISTORICAL REVENUE ANALYSIS ── */}
         <section className="cs-section">
-          <SectionLabel index="05">HISTORICAL REVENUE ANALYSIS</SectionLabel>
+          <SectionLabel index="05">EXECUTIVE / HISTORICAL REVENUE ANALYSIS</SectionLabel>
           <div className="cs-section-header">
-            <h2>Historical Revenue Analysis:<br /><span>Multi-Period Performance Tracking.</span></h2>
+            <h2>Executive &amp; Historical Revenue Analysis:<br /><span>Long-Term Performance Tracking.</span></h2>
             <p>
-              Dedicated analytical space to examine income behavior over time, evaluating collection stability and the fiscal calendar's seasonal patterns.
+              Executive dashboard developed in Power BI consolidating municipal revenue collection across multi-year periods (2007–2026), annual trend tracking, and period growth comparisons.
             </p>
           </div>
 
           <div className="mr-showcase-block">
             <CaptureFrame
-              src={MUNICIPAL_IMAGES.historical}
-              label="Historical Revenue Analysis — Multi-Period View"
-              sublabel="Temporal trends and revenue performance across available fiscal periods."
-              pathHint="public/images/images municipal/municipal-historical.png"
+              src={MUNICIPAL_IMAGES.main}
+              label="Municipal Revenue Dashboard — Executive & Historical Analysis"
+              sublabel="Consolidated executive view covering multi-year collection periods (2007–2026) and annual performance tracking."
+              pathHint="public/images/images municipal/municipal-main.png"
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
-                src: MUNICIPAL_IMAGES.historical,
-                title: "Historical Revenue Analysis — Multi-Period View",
-                desc: "Historical analysis of municipal revenue across available periods, allowing the identification of temporal variations and changes in collection performance."
+                src: MUNICIPAL_IMAGES.main,
+                title: "Municipal Revenue Dashboard — Executive & Historical Analysis",
+                desc: "Executive dashboard developed in Power BI consolidating municipal revenue collection across multi-year periods (2007–2026), annual trend tracking, and period growth comparisons."
               })}
             />
             <p className="mr-showcase-caption">
-              Historical analysis of municipal revenue across available periods, allowing the identification of temporal variations and changes in collection performance.
+              Executive dashboard developed in Power BI to monitor municipal revenue collection and its evolution across multi-year periods (2007–2026).
             </p>
           </div>
         </section>
 
-        {/* ── 6. DETAILED REVENUE ANALYSIS ── */}
+        {/* ── 06 — 2026 REVENUE ANALYSIS ── */}
         <section className="cs-section">
-          <SectionLabel index="06">DETAILED REVENUE ANALYSIS</SectionLabel>
+          <SectionLabel index="06">2026 REVENUE ANALYSIS</SectionLabel>
           <div className="cs-section-header">
-            <h2>Detailed Revenue Analysis:<br /><span>Granular Breakdown &amp; Comparison.</span></h2>
+            <h2>2026 Revenue Analysis:<br /><span>Fiscal Period In-Depth Tracking.</span></h2>
             <p>
-              Analytical view focused on disaggregating revenue streams by tax categories, monthly distribution, and period-over-period comparisons to assess structural dynamics.
+              Dedicated analytical report focused on the 2026 fiscal year, examining collection dynamics, period progress, and monthly tracking.
             </p>
           </div>
 
           <div className="mr-showcase-block">
             <CaptureFrame
-              src={MUNICIPAL_IMAGES.detailed}
-              label="Detailed Revenue Analysis — Breakdown &amp; Comparison View"
-              sublabel="Disaggregation by concept, monthly trends, and fiscal period comparisons."
-              pathHint="public/images/images municipal/municipal-detailed.png"
+              src={MUNICIPAL_IMAGES.revenue2026}
+              label="2026 Revenue Analysis Dashboard"
+              sublabel="Detailed report view focused on fiscal year 2026 collection performance and period tracking."
+              pathHint="public/images/images municipal/municipal-2026.png"
               aspectRatio="16/9"
+              placeholderBadge="DASHBOARD IN DEVELOPMENT"
+              iconType="pbi"
               onExpand={() => setLightboxImg({
-                src: MUNICIPAL_IMAGES.detailed,
-                title: "Detailed Revenue Analysis — Breakdown & Comparison View",
-                desc: "Detailed view allowing deeper examination of revenue performance across distinct categories, concepts, or comparative temporal dimensions."
+                src: MUNICIPAL_IMAGES.revenue2026,
+                title: "2026 Revenue Analysis Dashboard",
+                desc: "Detailed analytical report focused on fiscal year 2026 collection performance, monthly progress, and period comparisons."
               })}
             />
             <p className="mr-showcase-caption">
-              Detailed view allowing deeper examination of revenue performance across distinct categories, concepts, or comparative temporal dimensions.
+              Space reserved for the 2026 revenue analysis dashboard, covering detailed collection performance and period tracking.
             </p>
           </div>
         </section>
 
-        {/* ── 7. DAX & ANALYTICAL MEASURES ── */}
+        {/* ── 07 — DAX & ANALYTICAL LOGIC ── */}
         <section className="cs-section">
-          <SectionLabel index="07">DAX &amp; ANALYTICAL MEASURES</SectionLabel>
+          <SectionLabel index="07">DAX &amp; ANALYTICAL LOGIC</SectionLabel>
           <div className="cs-section-header">
-            <h2>DAX &amp; Analytical Measures:<br /><span>Underlying Business Logic.</span></h2>
+            <h2>DAX &amp; Analytical Logic:<br /><span>Semantic Layer &amp; Evaluation Context.</span></h2>
             <p>
-              Explicit calculated measures developed to provide the report with dynamic analytical intelligence and filter context responsiveness.
+              Selection of core DAX patterns engineered in Power BI Desktop to handle aggregations, time intelligence, relative variances, and filter context overrides.
             </p>
           </div>
 
-          <div className="mr-dax-list">
-            {DAX_MEASURES.map((measure) => (
-              <article className="mr-dax-card" key={measure.id}>
-                <div className="mr-dax-card-header">
-                  <div className="mr-dax-card-title">
-                    <span className="mr-dax-tech-badge">DAX</span>
-                    <h3>{measure.name}</h3>
-                  </div>
+          <div className="mr-dax-workspace">
+            {/* WORKSPACE TOP CONTROL BAR */}
+            <div className="mr-dax-topbar">
+              <div className="mr-dax-window-controls">
+                <span className="mr-dax-dot mr-dax-dot--red" />
+                <span className="mr-dax-dot mr-dax-dot--yellow" />
+                <span className="mr-dax-dot mr-dax-dot--green" />
+                <span className="mr-dax-file-tab">
+                  <code>FACT_DETCAJA.dax</code>
+                  <span className="mr-dax-file-badge">POWER BI SEMANTIC MODEL</span>
+                </span>
+              </div>
+              <div className="mr-dax-topbar-meta">
+                <span className="mr-dax-meta-tag">4 PATTERNS</span>
+                <span className="mr-dax-meta-tag">DAX FORMULA BAR</span>
+              </div>
+            </div>
+
+            {/* MEASURE TABS NAVIGATION */}
+            <div className="mr-dax-tab-strip" role="tablist" aria-label="DAX Measures">
+              {DAX_MEASURES.map((measure, index) => {
+                const isActive = measure.id === activeDaxId;
+                return (
                   <button
+                    key={measure.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`mr-dax-tab-btn ${isActive ? "mr-dax-tab-btn--active" : ""}`}
+                    onClick={() => setActiveDaxId(measure.id)}
+                  >
+                    <span className="mr-dax-tab-num">0{index + 1}</span>
+                    <span className="mr-dax-tab-name">[{measure.name}]</span>
+                    <span className="mr-dax-tab-pill">{measure.category}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ACTIVE MEASURE CODE EDITOR PANEL */}
+            <div className="mr-dax-editor-panel">
+              <div className="mr-dax-editor-header">
+                <div className="mr-dax-editor-title">
+                  <span className="mr-dax-fx-icon">fx</span>
+                  <strong>{activeDaxMeasure.name}</strong>
+                  <span className="mr-dax-target-table">Tabla: <code>FACT_DETCAJA</code></span>
+                </div>
+                <div className="mr-dax-editor-actions">
+                  <span className="mr-dax-concept-chip">{activeDaxMeasure.concept}</span>
+                  <button
+                    type="button"
                     className="mr-copy-btn"
-                    onClick={() => handleCopyCode(measure.id, measure.code)}
+                    onClick={() => handleCopyCode(activeDaxMeasure.id, activeDaxMeasure.code)}
                     title="Copy DAX formula"
                   >
-                    {copiedId === measure.id ? <CheckCheck size={13} /> : <Copy size={13} />}
-                    <span>{copiedId === measure.id ? "COPIED" : "COPY"}</span>
+                    {copiedId === activeDaxMeasure.id ? <CheckCheck size={13} /> : <Copy size={13} />}
+                    <span>{copiedId === activeDaxMeasure.id ? "COPIED" : "COPY"}</span>
                   </button>
                 </div>
+              </div>
 
-                <div className="mr-dax-code-wrap">
-                  <pre>
-                    <code>{measure.code}</code>
-                  </pre>
-                </div>
+              <div className="mr-dax-code-viewport">
+                <pre>
+                  <code>{activeDaxMeasure.code}</code>
+                </pre>
+              </div>
 
-                <div className="mr-dax-card-footer">
-                  <span className="mr-dax-exp-label">Short explanation:</span>
-                  <p>{measure.explanation}</p>
+              {/* TECHNICAL FOOTER */}
+              <div className="mr-dax-editor-footer">
+                <div className="mr-dax-insight-row">
+                  <div className="mr-dax-insight-item">
+                    <span className="mr-dax-insight-label">LÓGICA ANALÍTICA</span>
+                    <p>{activeDaxMeasure.explanation}</p>
+                  </div>
+                  <div className="mr-dax-insight-item mr-dax-insight-item--visual">
+                    <span className="mr-dax-insight-label">VISUAL EN EL DASHBOARD</span>
+                    <p>{activeDaxMeasure.visualRef}</p>
+                  </div>
                 </div>
-              </article>
-            ))}
+              </div>
+            </div>
           </div>
         </section>
 

@@ -2079,50 +2079,219 @@
   padding: 0 4px;
 }
 
-/* DAX Measures Structured List */
-.mr-dax-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.mr-dax-card {
+/* DAX Analytical Workspace */
+.mr-dax-workspace {
+  margin-top: 28px;
   border: 1px solid var(--line);
   background: var(--surface);
-  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  transition: border-color 0.25s;
 }
 
-.mr-dax-card:hover {
-  border-color: rgba(99, 179, 237, 0.45);
-}
-
-.mr-dax-card-header {
+.mr-dax-topbar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 16px 22px;
+  padding: 12px 18px;
+  background: #06090d;
   border-bottom: 1px solid var(--line);
-  background: rgba(11, 15, 20, 0.5);
+  gap: 14px;
 }
 
-.mr-dax-card-title {
+.mr-dax-window-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
-.mr-dax-card-title h3 {
+.mr-dax-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.mr-dax-dot--red { background: #ff5f56; }
+.mr-dax-dot--yellow { background: #ffbd2e; }
+.mr-dax-dot--green { background: #27c93f; }
+
+.mr-dax-file-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.mr-dax-file-tab code {
+  font: 11px var(--mono);
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+.mr-dax-file-badge {
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--mint);
+  opacity: 0.85;
+}
+
+.mr-dax-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mr-dax-meta-tag {
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  background: rgba(11, 15, 20, 0.6);
+}
+
+/* Tab Navigation Strip */
+.mr-dax-tab-strip {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  background: rgba(11, 15, 20, 0.65);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.mr-dax-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: 12px var(--mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.mr-dax-tab-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mr-dax-tab-btn--active {
+  color: var(--mint);
+  background: var(--surface);
+}
+
+.mr-dax-tab-btn--active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--mint);
+}
+
+.mr-dax-tab-num {
+  font: 10px var(--mono);
+  color: var(--faint);
+}
+
+.mr-dax-tab-btn--active .mr-dax-tab-num {
+  color: var(--mint);
+}
+
+.mr-dax-tab-name {
+  font-weight: 500;
+}
+
+.mr-dax-tab-pill {
+  font: 9px var(--mono);
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border: 1px solid rgba(167, 177, 184, 0.2);
+  color: var(--faint);
+  border-radius: 2px;
+}
+
+.mr-dax-tab-btn--active .mr-dax-tab-pill {
+  border-color: rgba(101, 214, 161, 0.35);
+  color: var(--mint);
+  background: rgba(101, 214, 161, 0.06);
+}
+
+/* Active Measure Editor Panel */
+.mr-dax-editor-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.mr-dax-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--line);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mr-dax-editor-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mr-dax-fx-icon {
+  font: 600 13px var(--mono);
+  color: var(--mint);
+  background: rgba(101, 214, 161, 0.08);
+  border: 1px solid rgba(101, 214, 161, 0.25);
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+.mr-dax-editor-title strong {
   font: 600 15px var(--mono);
   color: var(--text);
-  margin: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
-.mr-icon-mint {
+.mr-dax-target-table {
+  font: 11px var(--mono);
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+}
+
+.mr-dax-target-table code {
+  color: var(--blue);
+}
+
+.mr-dax-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mr-dax-concept-chip {
+  font: 10px var(--mono);
+  letter-spacing: 0.08em;
   color: var(--mint);
+  background: rgba(101, 214, 161, 0.05);
+  border: 1px solid rgba(101, 214, 161, 0.25);
+  padding: 4px 8px;
 }
 
 .mr-copy-btn {
@@ -2144,50 +2313,81 @@
   color: var(--text);
 }
 
-.mr-dax-code-wrap {
-  border-bottom: 1px solid var(--line);
-  background: #080c10;
-  padding: 20px 24px;
+.mr-dax-code-viewport {
+  background: #070a0e;
+  padding: 24px 26px;
   overflow-x: auto;
+  border-bottom: 1px solid var(--line);
 }
 
-.mr-dax-code-wrap pre {
+.mr-dax-code-viewport pre {
   margin: 0;
-  font: 13px/1.7 var(--mono);
+  font: 13.5px/1.75 var(--mono);
   color: #e2e8f0;
 }
 
-.mr-dax-code-wrap code {
+.mr-dax-code-viewport code {
   color: #63b3ed;
+  font-family: inherit;
 }
 
-.mr-dax-card-footer {
-  padding: 16px 24px;
+/* Insight Footer */
+.mr-dax-editor-footer {
+  padding: 18px 24px;
+  background: var(--surface);
+}
+
+.mr-dax-insight-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+
+.mr-dax-insight-item {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.01);
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mr-dax-insight-label {
+  font: 600 10px var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--mint);
+}
+
+.mr-dax-insight-item p {
+  margin: 0;
   font-size: 13px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
-.mr-dax-exp-label {
-  font: 600 11px var(--mono);
-  color: var(--mint);
-  white-space: nowrap;
-  letter-spacing: 0.04em;
-  padding-top: 1px;
+.mr-dax-insight-item--visual {
+  border-left: 1px solid var(--line);
+  padding-left: 20px;
 }
 
-.mr-dax-card-footer p {
-  margin: 0;
+.mr-dax-insight-item--visual p {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
 }
 
-@media (max-width: 768px) {
-  .mr-dax-card-footer {
+@media (max-width: 800px) {
+  .mr-dax-topbar {
     flex-direction: column;
-    gap: 4px;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .mr-dax-insight-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .mr-dax-insight-item--visual {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 14px;
   }
 }
 
