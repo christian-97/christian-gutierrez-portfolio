@@ -30,8 +30,8 @@ function SectionLabel({ index, children }) {
 // Catalog of image paths for Municipal Revenue Dashboard
 // Physical directory: public/images/municipal/
 export const MUNICIPAL_IMAGES = {
-  main: `${import.meta.env.BASE_URL}images/municipal/municipal-main.png`,
-  revenue2026: `${import.meta.env.BASE_URL}images/municipal/municipal-2026.png`,
+  main: `${import.meta.env.BASE_URL}images/municipal/municipal-main.webp`,
+  revenue2026: `${import.meta.env.BASE_URL}images/municipal/municipal-2026.webp`,
   model: `${import.meta.env.BASE_URL}images/municipal/municipal-data-model.png`,
   ssis: `${import.meta.env.BASE_URL}images/municipal/municipal-ssis.png`,
 };
@@ -74,18 +74,24 @@ function CaptureFrame({
         </span>
       )}
 
+      {/* Subtle skeleton shimmer while loading */}
+      {!isLoaded && !hasError && (
+        <div className="img-skeleton" aria-hidden="true" />
+      )}
+
       {src && !hasError && (
         <img
           src={src}
           alt={label}
-          className="mr-capture-img"
-          style={{ display: isLoaded ? "block" : "none" }}
+          className={`mr-capture-img ${isLoaded ? "mr-capture-img--loaded" : "mr-capture-img--loading"}`}
+          loading="lazy"
+          decoding="async"
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
         />
       )}
 
-      {(!isLoaded || hasError) && (
+      {hasError && (
         <div className="mr-capture-placeholder">
           <div className={`mr-placeholder-icon mr-placeholder-icon--${iconType}`}>
             {iconType === "ssis" ? <Layers size={32} /> : <PowerBiLogo size={32} />}
@@ -493,7 +499,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               src={MUNICIPAL_IMAGES.main}
               label="Municipal Revenue Dashboard — Executive & Historical Analysis"
               sublabel="Consolidated executive view covering multi-year collection periods (2007–2026) and annual performance tracking."
-              pathHint="public/images/municipal/municipal-main.png"
+              pathHint="public/images/municipal/municipal-main.webp"
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.main,
@@ -522,7 +528,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               src={MUNICIPAL_IMAGES.revenue2026}
               label="2026 Revenue Analysis Dashboard"
               sublabel="Detailed report view focused on fiscal year 2026 collection performance and period tracking."
-              pathHint="public/images/municipal/municipal-2026.png"
+              pathHint="public/images/municipal/municipal-2026.webp"
               aspectRatio="16/9"
               placeholderBadge="DASHBOARD IN DEVELOPMENT"
               iconType="pbi"

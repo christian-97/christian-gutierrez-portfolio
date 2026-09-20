@@ -21,7 +21,7 @@ export const FACTUONLINE_IMAGES = {
   users: `${import.meta.env.BASE_URL}images/factuonline/factuonline-users.png`,
   billing: `${import.meta.env.BASE_URL}images/factuonline/factuonline-billing.png`,
   feature: `${import.meta.env.BASE_URL}images/factuonline/factuonline-feature.png`,
-  logo: `${import.meta.env.BASE_URL}images/factuonline/logo.png`,
+  logo: `${import.meta.env.BASE_URL}images/factuonline/logo.webp`,
 };
 
 function ImagePlaceholder({ label, sublabel, pathHint, aspectRatio = "16/9", className = "", onClick = null, zoomHint = false }) {
@@ -60,17 +60,25 @@ function ImagePlaceholder({ label, sublabel, pathHint, aspectRatio = "16/9", cla
           <span>EXPAND</span>
         </span>
       )}
+
+      {/* Subtle skeleton shimmer while loading */}
+      {!isLoaded && !hasError && (
+        <div className="img-skeleton" aria-hidden="true" />
+      )}
+
       {pathHint && !hasError && (
         <img
           src={pathHint}
           alt={label}
-          className="cs-media-img"
-          style={{ display: isLoaded ? "block" : "none" }}
+          className={`cs-media-img ${isLoaded ? "cs-media-img--loaded" : "cs-media-img--loading"}`}
+          loading="lazy"
+          decoding="async"
           onLoad={handleLoad}
           onError={() => setHasError(true)}
         />
       )}
-      {(!isLoaded || hasError) && (
+
+      {hasError && (
         <div className="cs-placeholder-inner">
           <div className="cs-placeholder-icon">
             <ImageIcon size={28} strokeWidth={1.3} />
@@ -454,6 +462,8 @@ export function FactuOnlineCaseStudy({ onBack }) {
             src={FACTUONLINE_IMAGES.logo}
             alt="I-On Line"
             className="cs-btn-logo"
+            loading="lazy"
+            decoding="async"
           />
           <span>VISIT FACTUONLINE</span>
           <ArrowUpRight size={15} />
