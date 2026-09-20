@@ -28,12 +28,12 @@ function SectionLabel({ index, children }) {
 }
 
 // Catalog of image paths for Municipal Revenue Dashboard
-// Physical directory: public/images/images municipal/
+// Physical directory: public/images/municipal/
 export const MUNICIPAL_IMAGES = {
-  main: `${import.meta.env.BASE_URL}images/images municipal/municipal-main.png`,
-  revenue2026: `${import.meta.env.BASE_URL}images/images municipal/municipal-2026.png`,
-  model: `${import.meta.env.BASE_URL}images/images municipal/municipal-data-model.png`,
-  ssis: `${import.meta.env.BASE_URL}images/images municipal/municipal-ssis.png`,
+  main: `${import.meta.env.BASE_URL}images/municipal/municipal-main.png`,
+  revenue2026: `${import.meta.env.BASE_URL}images/municipal/municipal-2026.png`,
+  model: `${import.meta.env.BASE_URL}images/municipal/municipal-data-model.png`,
+  ssis: `${import.meta.env.BASE_URL}images/municipal/municipal-ssis.png`,
 };
 
 // Component to render real Power BI captures with a styled technical placeholder fallback
@@ -344,7 +344,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               src={MUNICIPAL_IMAGES.ssis}
               label="SSIS / ETL WORKFLOW"
               sublabel="Control Flow / Data Flow"
-              pathHint="public/images/images municipal/municipal-ssis.png"
+              pathHint="public/images/municipal/municipal-ssis.png"
               aspectRatio="16/9"
               placeholderBadge="SSIS / ETL WORKFLOW"
               iconType="ssis"
@@ -380,7 +380,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
                 src={MUNICIPAL_IMAGES.model}
                 label="Municipal Revenue — Dimensional Data Model"
                 sublabel="Star / Constellation Schema designed for municipal fiscal data analytics."
-                pathHint="public/images/images municipal/municipal-data-model.png"
+                pathHint="public/images/municipal/municipal-data-model.png"
                 aspectRatio="16/9"
                 onExpand={() => setLightboxImg({
                   src: MUNICIPAL_IMAGES.model,
@@ -493,7 +493,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               src={MUNICIPAL_IMAGES.main}
               label="Municipal Revenue Dashboard — Executive & Historical Analysis"
               sublabel="Consolidated executive view covering multi-year collection periods (2007–2026) and annual performance tracking."
-              pathHint="public/images/images municipal/municipal-main.png"
+              pathHint="public/images/municipal/municipal-main.png"
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.main,
@@ -522,7 +522,7 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               src={MUNICIPAL_IMAGES.revenue2026}
               label="2026 Revenue Analysis Dashboard"
               sublabel="Detailed report view focused on fiscal year 2026 collection performance and period tracking."
-              pathHint="public/images/images municipal/municipal-2026.png"
+              pathHint="public/images/municipal/municipal-2026.png"
               aspectRatio="16/9"
               placeholderBadge="DASHBOARD IN DEVELOPMENT"
               iconType="pbi"
