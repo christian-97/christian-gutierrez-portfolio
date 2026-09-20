@@ -214,7 +214,8 @@
   border-radius: 2px;
 }
 .cs-media-frame:hover .cs-media-zoom-hint,
-.cs-gallery-item:hover .cs-media-zoom-hint{
+.cs-gallery-item:hover .cs-media-zoom-hint,
+.mr-capture-frame:hover .cs-media-zoom-hint{
   opacity: 1;
   transform: translateY(0);
   border-color: rgba(101, 214, 161, 0.5);

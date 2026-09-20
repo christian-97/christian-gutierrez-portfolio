@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -51,11 +51,22 @@ function CaptureFrame({
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const handleKeyDown = (e) => {
+    if (onExpand && isLoaded && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onExpand();
+    }
+  };
+
   return (
     <div
       className={`mr-capture-frame ${isLoaded ? "mr-capture-frame--loaded" : ""} ${onExpand && isLoaded ? "mr-capture-frame--clickable" : ""}`}
       style={{ aspectRatio }}
       onClick={onExpand && isLoaded ? onExpand : undefined}
+      onKeyDown={onExpand && isLoaded ? handleKeyDown : undefined}
+      role={onExpand && isLoaded ? "button" : undefined}
+      tabIndex={onExpand && isLoaded ? 0 : undefined}
+      aria-label={onExpand && isLoaded ? `Enlarge ${label}` : undefined}
     >
       {onExpand && isLoaded && (
         <span className="cs-media-zoom-hint">
@@ -149,6 +160,22 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
   const [lightboxImg, setLightboxImg] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
 
+  useEffect(() => {
+    if (!lightboxImg) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setLightboxImg(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [lightboxImg]);
+
   const handleCopyCode = (id, code) => {
     navigator.clipboard.writeText(code).then(() => {
       setCopiedId(id);
@@ -211,7 +238,8 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.main,
-                title: "Municipal Revenue Dashboard — Executive Overview"
+                title: "Municipal Revenue Dashboard — Executive Overview",
+                desc: "Executive dashboard developed in Power BI to monitor municipal revenue collection and its evolution across selected periods."
               })}
             />
             <p className="mr-showcase-caption">
@@ -309,7 +337,8 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               iconType="ssis"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.ssis,
-                title: "SSIS / ETL Package — Control Flow / Data Flow"
+                title: "SSIS / ETL Package — Control Flow / Data Flow",
+                desc: "Visual evidence of SQL Server Integration Services (SSIS) packages used for data extraction and transformation."
               })}
             />
             <p className="mr-showcase-caption">
@@ -342,7 +371,8 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
                 aspectRatio="16/9"
                 onExpand={() => setLightboxImg({
                   src: MUNICIPAL_IMAGES.model,
-                  title: "Municipal Revenue — Dimensional Data Model (Star / Constellation Schema)"
+                  title: "Municipal Revenue — Dimensional Data Model (Star / Constellation Schema)",
+                  desc: "Dimensional model architecture connecting fiscal transaction data with shared municipal reference dimensions."
                 })}
               />
               <p className="mr-showcase-caption">
@@ -461,7 +491,8 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.historical,
-                title: "Historical Revenue Analysis — Multi-Period View"
+                title: "Historical Revenue Analysis — Multi-Period View",
+                desc: "Historical analysis of municipal revenue across available periods, allowing the identification of temporal variations and changes in collection performance."
               })}
             />
             <p className="mr-showcase-caption">
@@ -489,7 +520,8 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
               aspectRatio="16/9"
               onExpand={() => setLightboxImg({
                 src: MUNICIPAL_IMAGES.detailed,
-                title: "Detailed Revenue Analysis — Breakdown &amp; Comparison View"
+                title: "Detailed Revenue Analysis — Breakdown & Comparison View",
+                desc: "Detailed view allowing deeper examination of revenue performance across distinct categories, concepts, or comparative temporal dimensions."
               })}
             />
             <p className="mr-showcase-caption">
@@ -590,21 +622,61 @@ export default function MunicipalRevenueCaseStudy({ onBack }) {
 
       {/* ── LIGHTBOX MODAL FOR REAL CAPTURES ── */}
       {lightboxImg && (
-        <div className="cs-lightbox-overlay" onClick={() => setLightboxImg(null)}>
+        <div
+          className="cs-lightbox-backdrop"
+          onClick={() => setLightboxImg(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightboxImg.title}
+        >
           <div className="cs-lightbox-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="cs-lightbox-topbar">
-              <span className="cs-lightbox-title">{lightboxImg.title}</span>
-              <button
-                className="cs-lightbox-close"
-                onClick={() => setLightboxImg(null)}
-                aria-label="Close full preview"
+            <header className="cs-lightbox-header">
+              <div className="cs-lightbox-title-wrap">
+                <span className="cs-lightbox-num">POWER BI</span>
+                <h3 className="cs-lightbox-title">{lightboxImg.title}</h3>
+              </div>
+              <div className="cs-lightbox-actions">
+                <button
+                  type="button"
+                  className="cs-lightbox-close"
+                  onClick={() => setLightboxImg(null)}
+                  aria-label="Close preview"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </header>
+
+            <div
+              className="cs-lightbox-viewport"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setLightboxImg(null);
+                }
+              }}
+            >
+              <div
+                className="cs-lightbox-img-wrap"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setLightboxImg(null);
+                  }
+                }}
               >
-                <X size={18} />
-              </button>
+                <img
+                  src={lightboxImg.src}
+                  alt={lightboxImg.title}
+                  className="cs-lightbox-img"
+                />
+              </div>
             </div>
-            <div className="cs-lightbox-media">
-              <img src={lightboxImg.src} alt={lightboxImg.title} />
-            </div>
+
+            <footer className="cs-lightbox-footer">
+              <p className="cs-lightbox-desc">{lightboxImg.desc || ""}</p>
+              <div className="cs-lightbox-hint">
+                <span>ESC to close</span>
+              </div>
+            </footer>
           </div>
         </div>
       )}
